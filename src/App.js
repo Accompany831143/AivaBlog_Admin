@@ -1,10 +1,15 @@
+import { BrowserRouter as Router, Route, Redirect  } from "react-router-dom";
+import Login from './views/Login'
+import Manage from './views/Manage'
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <h1>Aiva-admin</h1>
-    </div>
+    <Router>
+      <Route path="/login" exact component={Login} />
+      <Route path="/manage" component={Manage} />
+      <Redirect from='/' to='/login' />
+    </Router>
   );
 }
 

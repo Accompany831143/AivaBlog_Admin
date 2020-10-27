@@ -1,0 +1,32 @@
+.loginMain {
+    position: relative;
+    width:100vw;
+    height:100vh;
+    background:url('../../images/login_bg.jpg') no-repeat 0 0/cover;
+}
+.container {
+    position: relative;
+    width:1200px;
+    height:100%;
+    margin:0 auto;
+}
+.loginBox {
+    position: absolute;
+    top:50%;
+    left:0;
+    transform: translateY(-50%);
+    width:400px;
+    background-color: rgba(0,0,0,.3);
+    padding:20px;
+    border-radius:4px;
+}
+.loginBox label {
+    color:#fff !important;
+
+}
+.loginBox h1 {
+    text-align: center;
+    padding-bottom: 16px;
+    color:#1890ff;
+
+}
