@@ -11,6 +11,7 @@ function App() {
         <Route path="/login" component={Login} />
         <Route path="/manage" component={Manage} />
         <Redirect from='/' to='/login' />
+        <Route component={Login} />
       </Switch>
     </Router>
   );

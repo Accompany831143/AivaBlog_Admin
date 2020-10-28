@@ -4,6 +4,21 @@
     /* background: rgba(255, 255, 255); */
     text-align: center;
   }
+  .headerBox {
+    display:flex;
+    justify-content: space-between;
+  }
+  .timeInfo {
+    display: flex;
+  }
+  .userSetting {
+    
+  }
+  .quit {
+    color:#999;
+    cursor: pointer;
+    margin-left: 20px;
+  }
   
   .site-layout .site-layout-background {
     background: #fff;

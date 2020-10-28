@@ -6,8 +6,8 @@ Mock.mock('/api/admin/login','post',(params) => {
         stateMessage:'ok',
         body:{
             userInfo:{
-                adminName:'Aiva',
-                adminGroup:'admin'
+                userName:'Aiva',
+                userGroup:'admin'
             }
         }
     })

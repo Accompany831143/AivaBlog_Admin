@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { BrowserRouter as Router,Route, Redirect, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import { Layout, Menu } from 'antd';
 import {
     HomeOutlined,
@@ -29,8 +29,27 @@ export default class Manage extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            collapsed: false
+            collapsed: false,
+            userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {},
+            timeInfo:'',
+            timer1:null
         }
+    }
+
+    
+    
+    componentDidMount() {
+        this.getTime()
+        let userInfo = JSON.parse(sessionStorage.getItem('loginInfo'))
+        if (!userInfo || !userInfo.state) {
+            let { history } = this.props
+            history.push('/')
+        }
+    }
+
+
+    componentWillUnmount() {
+        clearInterval(this.timer1)
     }
 
     // 侧边栏切换
@@ -40,8 +59,40 @@ export default class Manage extends Component {
 
     // 路由跳转
     viewChange(item) {
-        this.props.history.push('/manage'+item.key)
+        this.props.history.push('/manage' + item.key)
     }
+
+    // 计算时间
+    getTime() {
+        function addZero(num) {
+            return num < 10 ? '0' + num : num
+        }
+        this.timer1 = setInterval(() => {
+            let timeStr = ''
+            let t = new Date()
+            let Y = t.getFullYear()
+            let m = addZero(t.getMonth() + 1)
+            let d = addZero(t.getDate())
+
+            let H = addZero(t.getHours())
+            let M = addZero(t.getMinutes())
+            let S = addZero(t.getSeconds())
+
+            let week = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'][t.getDay()]
+            timeStr = `${Y}年${m}月${d}日 ${week} ${H}:${M}:${S}`
+            this.setState({
+                timeInfo:timeStr
+            })
+        },1000)
+        
+    }
+
+    // 用户退出
+    userQuit() {
+        sessionStorage.clear()
+        this.props.history.push('/login')
+    }
+
 
 
 
@@ -68,22 +119,35 @@ export default class Manage extends Component {
                 </Sider>
                 <Layout className="site-layout">
                     <Header className="site-layout-background" style={{ paddingLeft: 16, paddingRight: 16 }}>
-                        {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
-                            className: 'trigger',
-                            onClick: this.toggle.bind(this),
-                        })}
+
+                        <div className="headerBox">
+                            <div className="timeInfo">
+                                <div>
+                                    {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                                        className: 'trigger',
+                                        onClick: this.toggle.bind(this),
+                                    })}
+                                </div>
+                                <div style={{ marginLeft: 20 }}>
+                                    <p>{this.state.timeInfo}</p>
+                                </div>
+                            </div>
+                            <div className="userSetting">
+                                <p>欢迎您，<span>{this.state.userInfo.userName}</span><span onClick={this.userQuit.bind(this)} className="quit">退出</span></p>
+                            </div>
+                        </div>
                     </Header>
                     <Content style={{ margin: '0 16px' }}>
 
                         <div className="mainContent">
                             <Switch>
-                                <Route path={"/manage/home"} exact  component={Home} />
-                                <Route path={"/manage/channel"} exact  component={Channel} />
-                                <Route path={"/manage/article"} exact  component={Article} />
-                                <Route path={"/manage/tag"} exact  component={Tag} />
-                                <Route path={"/manage/picture"} exact  component={Picture} />
-                                <Route path={"/manage/user"} exact  component={User} />
-                                <Redirect from='/manage' exact  to={"/manage/home"} />
+                                <Route path={"/manage/home"} exact component={Home} />
+                                <Route path={"/manage/channel"} exact component={Channel} />
+                                <Route path={"/manage/article"} exact component={Article} />
+                                <Route path={"/manage/tag"} exact component={Tag} />
+                                <Route path={"/manage/picture"} exact component={Picture} />
+                                <Route path={"/manage/user"} exact component={User} />
+                                <Redirect from='/manage' exact to={"/manage/home"} />
                             </Switch>
                         </div>
                     </Content>
