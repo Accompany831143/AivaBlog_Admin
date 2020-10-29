@@ -133,11 +133,11 @@ export default class Manage extends Component {
                                 </div>
                             </div>
                             <div className="userSetting">
-                                <p>欢迎您，<span>{this.state.userInfo.userName}</span><span onClick={this.userQuit.bind(this)} className="quit">退出</span></p>
+                                <p><span>{this.state.userInfo.userName}</span><span onClick={this.userQuit.bind(this)} className="quit">退出</span></p>
                             </div>
                         </div>
                     </Header>
-                    <Content style={{ margin: '0 16px' }}>
+                    <Content style={{ margin: '0 16px',maxHeight:'calc(100vh - 64px - 54px)',overflow:'hidden' }}>
 
                         <div className="mainContent">
                             <Switch>

@@ -67,7 +67,7 @@ export default class Login extends Component {
 
     componentDidMount() {
         let userInfo = JSON.parse(sessionStorage.getItem('loginInfo'))
-        if(userInfo && userInfo.state) {
+        if(userInfo && userInfo.state && userInfo.token) {
             let { history } = this.props
             history.push('/manage')
         }else {
@@ -75,10 +75,11 @@ export default class Login extends Component {
         }
     }
 
+    // 获取验证码
     getAuthCode() {
         Axios({
             url:'/api/admin/authCode'
-        }).then(res => {
+        },false).then(res => {
             this.setState({
                 authCode:res.authCode
             })
@@ -95,9 +96,9 @@ export default class Login extends Component {
                 userPasswrod: options.password,
                 authCode: options.authCode
             }
-        }).then(res => {
+        },false).then(res => {
             sessionStorage.setItem('userInfo', JSON.stringify(res.userInfo))
-            sessionStorage.setItem('loginInfo', JSON.stringify({state:true}))
+            sessionStorage.setItem('loginInfo', JSON.stringify({state:true,token:res.token}))
             let { history } = this.props
             message.success('登录成功！')
             history.push('/manage')

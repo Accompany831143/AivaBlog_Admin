@@ -2,7 +2,21 @@ import Axios from 'axios';
 import {message} from 'antd'
 
 // Axios.defaults.baseURL = ''
-export default (options) => {
+export default (options,flag) => {
+    if(flag === undefined) {
+        flag = true
+    }
+    let loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'))
+
+    if(flag && loginInfo.state && loginInfo.token) {
+        if(options.headers) {
+            options.headers['Authorization'] = loginInfo.token
+        }else {
+            options.headers = {}
+            options.headers['Authorization'] = loginInfo.token
+        }
+    }
+
     return new Promise((resolve,reject) => {
         Axios(options).then(res => {
             if(res.status === 200) {

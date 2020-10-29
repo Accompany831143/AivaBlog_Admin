@@ -37,6 +37,7 @@
   },
   "devDependencies": {
     "@ant-design/icons": "^4.2.2",
+    "@antv/g2": "^4.0.15",
     "antd": "^4.7.3",
     "axios": "^0.21.0",
     "mockjs": "^1.1.0",
