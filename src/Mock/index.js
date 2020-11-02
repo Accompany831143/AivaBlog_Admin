@@ -1,5 +1,7 @@
 const Mock = require('mockjs')
 
+
+// 用户登录
 Mock.mock('/api/admin/login', 'post', (params) => {
     return Mock.mock({
         stateCode: 0,
@@ -14,6 +16,7 @@ Mock.mock('/api/admin/login', 'post', (params) => {
     })
 })
 
+// 验证码
 Mock.mock('/api/admin/authCode', 'get', (params) => {
     return Mock.mock({
         stateCode: 0,
@@ -24,6 +27,8 @@ Mock.mock('/api/admin/authCode', 'get', (params) => {
     })
 })
 
+
+// 获取统计数据
 Mock.mock(/\/api\/admin\/home\/getStatistical/, 'get', params => {
     return Mock.mock({
         stateCode: 0,
@@ -39,7 +44,7 @@ Mock.mock(/\/api\/admin\/home\/getStatistical/, 'get', params => {
     })
 })
 
-
+// 获取连接数据
 Mock.mock(/\/api\/admin\/home\/getAccess/, 'get', params => {
     return Mock.mock({
         stateCode: 0,
@@ -52,6 +57,7 @@ Mock.mock(/\/api\/admin\/home\/getAccess/, 'get', params => {
     })
 })
 
+// 获取最近添加文章数据
 Mock.mock(/\/api\/admin\/home\/getAddArticle/, 'get', params => {
     return Mock.mock({
         stateCode: 0,
@@ -64,6 +70,7 @@ Mock.mock(/\/api\/admin\/home\/getAddArticle/, 'get', params => {
     })
 })
 
+// 获取文章占比数据
 Mock.mock(/\/api\/admin\/home\/getArticle/, 'get', params => {
     return Mock.mock({
         stateCode: 0,
@@ -76,6 +83,8 @@ Mock.mock(/\/api\/admin\/home\/getArticle/, 'get', params => {
     })
 })
 
+
+// 获取用户信息数据
 Mock.mock(/\/api\/admin\/home\/getUser/, 'get', params => {
     return Mock.mock({
         stateCode: 0,
@@ -83,6 +92,25 @@ Mock.mock(/\/api\/admin\/home\/getUser/, 'get', params => {
         body: {
             'data|30': [
                 { id: '@id','date':"@date",'num|1-100':1}
+            ]
+        }
+    })
+})
+
+// 获取所有栏目
+Mock.mock(/\/api\/admin\/channel\/latest/, 'get', params => {
+    return Mock.mock({
+        stateCode: 0,
+        stateMessage: 'ok',
+        body: {
+            'data|5-10': [
+                {   
+                    cid:'@id',
+                    name: '@ctitle',
+                    describe: '@csentence',
+                    createDate: '@date',
+                    author:'@cname'
+                },
             ]
         }
     })

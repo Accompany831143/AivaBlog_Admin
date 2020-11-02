@@ -9,7 +9,9 @@ import {
     UserOutlined,
     PictureOutlined,
     MenuFoldOutlined,
-    MenuUnfoldOutlined
+    MenuUnfoldOutlined,
+    MessageOutlined,
+    SettingOutlined
 } from '@ant-design/icons';
 
 import Home from "./Home";
@@ -18,6 +20,8 @@ import Article from "./Article";
 import Tag from "./Tag";
 import Picture from "./Picture";
 import User from "./User";
+import Admin from "./Admin";
+import Message from "./Message";
 
 import AivaLogo from '../../images/Aiva.png';
 import "./index.css"
@@ -41,7 +45,7 @@ export default class Manage extends Component {
     componentDidMount() {
         this.getTime()
         let userInfo = JSON.parse(sessionStorage.getItem('loginInfo'))
-        if (!userInfo || !userInfo.state) {
+        if (!userInfo || !userInfo.state || !userInfo.token) {
             let { history } = this.props
             history.push('/')
         }
@@ -115,6 +119,10 @@ export default class Manage extends Component {
                         <Menu.Item key="/tag" onClick={this.viewChange.bind(this)} icon={<TagsOutlined />}>标签管理</Menu.Item>
                         <Menu.Item key="/picture" onClick={this.viewChange.bind(this)} icon={<PictureOutlined />}>图片管理</Menu.Item>
                         <Menu.Item key="/user" onClick={this.viewChange.bind(this)} icon={<UserOutlined />}>用户管理</Menu.Item>
+                        <Menu.Item key="/message" onClick={this.viewChange.bind(this)} icon={<MessageOutlined />}>留言管理</Menu.Item>
+                        <Menu.Item key="/admin" onClick={this.viewChange.bind(this)} icon={<SettingOutlined />}>管理员设置</Menu.Item>
+
+                        
                     </Menu>
                 </Sider>
                 <Layout className="site-layout">
@@ -147,7 +155,10 @@ export default class Manage extends Component {
                                 <Route path={"/manage/tag"} exact component={Tag} />
                                 <Route path={"/manage/picture"} exact component={Picture} />
                                 <Route path={"/manage/user"} exact component={User} />
+                                <Route path={"/manage/admin"} exact component={Admin} />
+                                <Route path={"/manage/message"} exact component={Message} />
                                 <Redirect from='/manage' exact to={"/manage/home"} />
+                                <Route component={Home} />
                             </Switch>
                         </div>
                     </Content>

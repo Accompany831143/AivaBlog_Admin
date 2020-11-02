@@ -1,0 +1,12 @@
+.menu_form {
+    width:calc(100% - 16px);
+    padding:20px 0;
+    display: flex;
+    justify-content: space-between;
+}
+.inputsWrapper {
+
+}
+.btnsWrapper>button {
+    margin-left:10px;
+}

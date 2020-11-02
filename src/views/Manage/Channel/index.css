@@ -1,0 +1,15 @@
+.channelManage {
+
+}
+.tableBox {
+    padding-right:16px;
+}
+.actionStyle {
+    display: flex;
+}
+.actionStyle>div {
+    cursor: pointer;
+}
+.actionStyle>div:hover {
+    color:#1890ff;
+}
