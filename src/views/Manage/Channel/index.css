@@ -13,3 +13,22 @@
 .actionStyle>div:hover {
     color:#1890ff;
 }
+.channelDetail>div {
+    display: flex;
+    margin-bottom:16px;
+    color:#999;
+}
+.channelDetail>div>span:first-of-type {
+    width:30%;
+    padding-right:10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align:right;
+}
+.channelDetail>div>span:last-of-type {
+    width:70%;
+    /* white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; */
+}

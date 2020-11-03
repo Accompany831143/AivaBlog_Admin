@@ -44,6 +44,20 @@ Mock.mock(/\/api\/admin\/home\/getStatistical/, 'get', params => {
     })
 })
 
+// 获取上次登录信息
+Mock.mock(/\/api\/admin\/home\/getLastInfo/, 'get', params => {
+    return Mock.mock({
+        stateCode: 0,
+        stateMessage: 'ok',
+        body: {
+            'data': {
+                ip:'@ip',
+                date:'@datetime'
+            }
+        }
+    })
+})
+
 // 获取连接数据
 Mock.mock(/\/api\/admin\/home\/getAccess/, 'get', params => {
     return Mock.mock({
@@ -99,6 +113,10 @@ Mock.mock(/\/api\/admin\/home\/getUser/, 'get', params => {
 
 // 获取所有栏目
 Mock.mock(/\/api\/admin\/channel\/latest/, 'get', params => {
+    let page = params.url.split('?')[1].split('&')[0].split('=')[1]
+    let pageSize = params.url.split('?')[1].split('&')[1].split('=')[1]
+    page = parseInt(page)
+    pageSize = parseInt(pageSize)
     return Mock.mock({
         stateCode: 0,
         stateMessage: 'ok',
@@ -108,10 +126,73 @@ Mock.mock(/\/api\/admin\/channel\/latest/, 'get', params => {
                     cid:'@id',
                     name: '@ctitle',
                     describe: '@csentence',
-                    createDate: '@date',
+                    'level|1-10':0,
+                    createDate: '@datetime',
                     author:'@cname'
                 },
-            ]
+            ],
+            pageInfo:{
+                'total|6-32':10,
+                current:page,
+                pageSize
+            }
+        }
+    })
+})
+
+
+// 添加栏目
+Mock.mock(/\/api\/admin\/channel\/add/, 'post', params => {
+
+    return Mock.mock({
+        stateCode: 0,
+        stateMessage: 'ok',
+        body: {
+            'result': [
+                {   
+                    cid:'@id',
+                    name: '@ctitle',
+                    describe: '@csentence',
+                    'level|1-10':0,
+                    createDate: '@datetime',
+                    author:'@cname'
+                },
+            ],
+            
+        }
+    })
+})
+
+// 编辑栏目
+Mock.mock(/\/api\/admin\/channel\/update/, 'post', params => {
+
+    return Mock.mock({
+        stateCode: 0,
+        stateMessage: 'ok',
+        body: {
+            'result': [
+                {   
+                    cid:'@id',
+                    name: '@ctitle',
+                    describe: '@csentence',
+                    'level|1-10':0,
+                    createDate: '@datetime',
+                    author:'@cname'
+                },
+            ],
+            
+        }
+    })
+})
+
+// 删除栏目
+Mock.mock(/\/api\/admin\/channel\/delete/, 'post', params => {
+    return Mock.mock({
+        stateCode: 0,
+        stateMessage: 'ok',
+        body: {
+            'result': JSON.parse(params.body).ids
+            
         }
     })
 })

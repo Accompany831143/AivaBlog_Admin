@@ -17,11 +17,13 @@ export default class Home extends Component {
             accessData: [],
             addArticleData: [],
             articleMapData: [],
-            userData:[]
+            userData:[],
+            lastInfo:{}
         }
     }
 
     componentDidMount() {
+        this.getLastInfo()
         this.getStatisticalData()
         this.getWeather()
         this.getAddArticleData(this.renderAddArticleMap.bind(this))
@@ -38,6 +40,18 @@ export default class Home extends Component {
         }).then(res => {
             this.setState({
                 statistical: res.data
+            })
+        })
+    }
+
+    // 获取上次登录数据
+    getLastInfo() {
+        Axios({
+            url: '/api/admin/home/getLastInfo'
+        }).then(res => {
+            console.log(res)
+            this.setState({
+                lastInfo: res.data
             })
         })
     }
@@ -349,6 +363,10 @@ export default class Home extends Component {
             <div className="manage_home">
                 <div>
                     <h2>欢迎您，{this.state.userInfo.userName}</h2>
+                    <p style={{color:'#999'}}>
+                        <span>上次登录IP：{this.state.lastInfo.ip}</span>
+                        <span style={{marginLeft:16}}>登录时间：{this.state.lastInfo.date}</span>
+                    </p>
                     <p>
                         今天
                         {this.state.weatherInfo.city}

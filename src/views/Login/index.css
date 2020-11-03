@@ -2,7 +2,7 @@
     position: relative;
     width:100vw;
     height:100vh;
-    background:url('../../images/login_bg.jpg') no-repeat 0 0/cover;
+    background:url('../../images/16.jpg') no-repeat 0 0/cover;
 }
 .container {
     position: relative;
@@ -13,15 +13,16 @@
 .loginBox {
     position: absolute;
     top:50%;
-    left:0;
-    transform: translateY(-50%);
+    left:50%;
+    transform: translate(-50%,-50%);
     width:400px;
-    background-color: rgba(0,0,0,.3);
+    /* background-color: #fff; */
+    background-color: rgba(255,255,255,.6);
     padding:20px;
     border-radius:4px;
 }
 .loginBox label {
-    color:#fff !important;
+    color:#000 !important;
 
 }
 .loginBox h1 {
