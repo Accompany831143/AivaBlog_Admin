@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { Input, Button,message } from 'antd';
+import { Input, Button } from 'antd';
 import "./index.css";
 const { Search } = Input
 export default class MenuForm extends Component {
@@ -21,13 +21,7 @@ export default class MenuForm extends Component {
 
     // 搜索标题内容
     searchTitle() {
-        if (this.state.keyword === '') {
-            message.warning('请输入搜索内容！')
-            return
-        } else {
-            this.props.onSearch(this.state.keyword)
-
-        }
+        this.props.onSearch(this.state.keyword)
     }
 
     // 添加

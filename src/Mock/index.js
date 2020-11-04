@@ -35,10 +35,10 @@ Mock.mock(/\/api\/admin\/home\/getStatistical/, 'get', params => {
         stateMessage: 'ok',
         body: {
             'data': {
-                allUser:43,
-                allPicture:126,
-                allTag:23,
-                allMessage:98
+                allUser: 43,
+                allPicture: 126,
+                allTag: 23,
+                allMessage: 98
             }
         }
     })
@@ -51,8 +51,8 @@ Mock.mock(/\/api\/admin\/home\/getLastInfo/, 'get', params => {
         stateMessage: 'ok',
         body: {
             'data': {
-                ip:'@ip',
-                date:'@datetime'
+                ip: '@ip',
+                date: '@datetime'
             }
         }
     })
@@ -65,7 +65,7 @@ Mock.mock(/\/api\/admin\/home\/getAccess/, 'get', params => {
         stateMessage: 'ok',
         body: {
             'data|30': [
-                { id: '@id','date':"@date",'num|1-100':1}
+                { id: '@id', 'date': "@date", 'num|1-100': 1 }
             ]
         }
     })
@@ -78,7 +78,7 @@ Mock.mock(/\/api\/admin\/home\/getAddArticle/, 'get', params => {
         stateMessage: 'ok',
         body: {
             'data|7': [
-                { id: '@id','date':"@date",'num|1-10':1}
+                { id: '@id', 'date': "@date", 'num|1-10': 1 }
             ]
         }
     })
@@ -91,7 +91,7 @@ Mock.mock(/\/api\/admin\/home\/getArticle/, 'get', params => {
         stateMessage: 'ok',
         body: {
             'data|7': [
-                { id: '@id','type':"@title",'value|1-5':1}
+                { id: '@id', 'type': "@title", 'value|1-5': 1 }
             ]
         }
     })
@@ -105,7 +105,7 @@ Mock.mock(/\/api\/admin\/home\/getUser/, 'get', params => {
         stateMessage: 'ok',
         body: {
             'data|30': [
-                { id: '@id','date':"@date",'num|1-100':1}
+                { id: '@id', 'date': "@date", 'num|1-100': 1 }
             ]
         }
     })
@@ -122,18 +122,18 @@ Mock.mock(/\/api\/admin\/channel\/latest/, 'get', params => {
         stateMessage: 'ok',
         body: {
             'data|5-10': [
-                {   
-                    cid:'@id',
+                {
+                    cid: '@id',
                     name: '@ctitle',
                     describe: '@csentence',
-                    'level|1-10':0,
+                    'level|1-10': 0,
                     createDate: '@datetime',
-                    author:'@cname'
+                    author: '@cname'
                 },
             ],
-            pageInfo:{
-                'total|6-32':10,
-                current:page,
+            pageInfo: {
+                'total|6-32': 10,
+                current: page,
                 pageSize
             }
         }
@@ -149,16 +149,16 @@ Mock.mock(/\/api\/admin\/channel\/add/, 'post', params => {
         stateMessage: 'ok',
         body: {
             'result': [
-                {   
-                    cid:'@id',
+                {
+                    cid: '@id',
                     name: '@ctitle',
                     describe: '@csentence',
-                    'level|1-10':0,
+                    'level|1-10': 0,
                     createDate: '@datetime',
-                    author:'@cname'
+                    author: '@cname'
                 },
             ],
-            
+
         }
     })
 })
@@ -171,16 +171,16 @@ Mock.mock(/\/api\/admin\/channel\/update/, 'post', params => {
         stateMessage: 'ok',
         body: {
             'result': [
-                {   
-                    cid:'@id',
+                {
+                    cid: '@id',
                     name: '@ctitle',
                     describe: '@csentence',
-                    'level|1-10':0,
+                    'level|1-10': 0,
                     createDate: '@datetime',
-                    author:'@cname'
+                    author: '@cname'
                 },
             ],
-            
+
         }
     })
 })
@@ -192,7 +192,35 @@ Mock.mock(/\/api\/admin\/channel\/delete/, 'post', params => {
         stateMessage: 'ok',
         body: {
             'result': JSON.parse(params.body).ids
-            
+
+        }
+    })
+})
+
+// 搜索栏目
+Mock.mock(/\/api\/admin\/channel\/search/, 'get', params => {
+    // console.log(params)
+    let page = params.url.split('?')[1].split('&')[1].split('=')[1]
+    page = parseInt(page)
+    return Mock.mock({
+        stateCode: 0,
+        stateMessage: 'ok',
+        body: {
+            'data|5-10': [
+                {
+                    cid: '@id',
+                    name: '@ctitle',
+                    describe: '@csentence',
+                    'level|1-10': 0,
+                    createDate: '@datetime',
+                    author: '@cname'
+                },
+            ],
+            pageInfo: {
+                'total|6-32': 10,
+                current: page,
+                pageSize:10
+            }
         }
     })
 })

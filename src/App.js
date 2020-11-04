@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
 import Login from './views/Login'
 import Manage from './views/Manage'
-import "./Mock"
+// import "./Mock"
 import './App.css';
 
 function App() {

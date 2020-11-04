@@ -10,6 +10,7 @@ export default class Channel extends Component {
         this.state = {
             selectedRowKeys: [],
             tableData: [],
+            keyWord: '',
             showAddDrawer: false,
             editFlag: false,
             showDetail: false,
@@ -78,6 +79,11 @@ export default class Channel extends Component {
                 current: 1,
                 pageSize: 10
             },
+            searchPageInfo: {
+                total: 50,
+                current: 1,
+                pageSize: 10
+            },
             validate: {
                 channelName: [
                     {
@@ -120,7 +126,7 @@ export default class Channel extends Component {
             url: '/api/admin/channel/latest/',
             params: {
                 page: this.state.pageInfo.current,
-                pageSize: 10
+                pageSize: this.state.pageInfo.pageSize
             }
         }).then(res => {
             res.data = res.data.map(item => {
@@ -144,19 +150,67 @@ export default class Channel extends Component {
 
     // 页码变化 
     pageChange(page, pageSize) {
-        this.setState({
-            pageInfo: {
-                current: page,
-                pageSize
-            }
-        }, () => {
-            this.getChannel()
-        })
+        if (this.state.keyWord) {
+            this.setState({
+                searchPageInfo: {
+                    current: page,
+                    pageSize
+                }
+            }, () => {
+                this.commitSearch()
+            })
+        } else {
+            this.setState({
+                pageInfo: {
+                    current: page,
+                    pageSize
+                }
+            }, () => {
+                this.getChannel()
+            })
+        }
+
     }
 
     // 搜索
     SearchHandler(val) {
-        console.log('搜索', val)
+        this.setState({
+            keyWord: val,
+            searchPageInfo: {
+                current: val ? this.state.searchPageInfo.current : 1
+            }
+        }, () => {
+            if (val) {
+                this.commitSearch()
+            } else {
+                message.warning('请输入搜索内容！')
+            }
+        })
+
+    }
+
+    // 提交搜索
+    commitSearch() {
+        Axios({
+            url: '/api/admin/channel/search',
+            params: {
+                keyword: this.state.keyWord,
+                page: this.state.searchPageInfo.current,
+                pageSize: this.state.searchPageInfo.pageSize
+            }
+        }).then(res => {
+            res.data = res.data.map(item => {
+                item.key = item.cid
+                return item
+            })
+            this.setState({
+                tableData: res.data,
+                pageInfo: {
+                    total: res.pageInfo.total,
+                    current: res.pageInfo.current
+                }
+            })
+        })
     }
 
     // 添加栏目

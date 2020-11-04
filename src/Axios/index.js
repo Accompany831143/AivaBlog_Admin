@@ -1,14 +1,14 @@
 import Axios from 'axios';
-import {message} from 'antd'
+import {message} from 'antd';
+const baseUrl = require('./envConst.js')
+Axios.defaults.baseURL = baseUrl
+Axios.defaults.timeout = 5000
+Axios.defaults.withCredentials = true
 
-// Axios.defaults.baseURL = ''
-export default (options,flag) => {
-    if(flag === undefined) {
-        flag = true
-    }
+export default (options) => {
     let loginInfo = JSON.parse(sessionStorage.getItem('loginInfo'))
 
-    if(flag && loginInfo.state && loginInfo.token) {
+    if(loginInfo && loginInfo.token) {
         if(options.headers) {
             options.headers['Authorization'] = loginInfo.token
         }else {

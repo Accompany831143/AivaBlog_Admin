@@ -49,7 +49,6 @@ export default class Home extends Component {
         Axios({
             url: '/api/admin/home/getLastInfo'
         }).then(res => {
-            console.log(res)
             this.setState({
                 lastInfo: res.data
             })

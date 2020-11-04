@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Form, Input, Button,message } from 'antd';
+import { Form, Input, Button, message } from 'antd';
 import { UserOutlined, LockOutlined, SafetyCertificateOutlined } from '@ant-design/icons';
 import Axios from "../../Axios"
 import "./index.css";
@@ -61,16 +61,16 @@ export default class Login extends Component {
                     }
                 ],
             },
-            authCode:''
+            authCode: ''
         }
     }
 
     componentDidMount() {
         let userInfo = JSON.parse(sessionStorage.getItem('loginInfo'))
-        if(userInfo && userInfo.state && userInfo.token) {
+        if (userInfo && userInfo.state && userInfo.token) {
             let { history } = this.props
             history.push('/manage')
-        }else {
+        } else {
             this.getAuthCode()
         }
     }
@@ -78,10 +78,10 @@ export default class Login extends Component {
     // 获取验证码
     getAuthCode() {
         Axios({
-            url:'/api/admin/authCode'
-        },false).then(res => {
+            url: '/api/admin/authCode'
+        }).then(res => {
             this.setState({
-                authCode:res.authCode
+                authCode: res.authCode
             })
         })
     }
@@ -96,9 +96,9 @@ export default class Login extends Component {
                 userPasswrod: options.password,
                 authCode: options.authCode
             }
-        },false).then(res => {
+        }).then(res => {
             sessionStorage.setItem('userInfo', JSON.stringify(res.userInfo))
-            sessionStorage.setItem('loginInfo', JSON.stringify({state:true,token:res.token}))
+            sessionStorage.setItem('loginInfo', JSON.stringify({ state: true, token: res.token }))
             let { history } = this.props
             message.success('登录成功！')
             history.push('/manage')
@@ -129,7 +129,7 @@ export default class Login extends Component {
                                 <Form.Item name="authCode" noStyle rules={this.state.validate.authCode}>
                                     <Input style={{ width: 150 }} placeholder="请输入验证码" prefix={<SafetyCertificateOutlined />} allowClear />
                                 </Form.Item>
-                                <img style={{ marginLeft: 10, width: 100, height: 32,cursor:'pointer' }} src={this.state.authCode} onClick={this.getAuthCode.bind(this)} />
+                                <span style={{ display: 'inline-block', background: '#fff', verticalAlign: 'middle', marginLeft: 10, width: 100, height: 32, cursor: 'pointer' }} onClick={this.getAuthCode.bind(this)} dangerouslySetInnerHTML={{ __html: this.state.authCode }}></span>
                             </Form.Item>
                             <Button size="large" type="primary" block htmlType="submit">立即登录</Button>
                         </Form>
