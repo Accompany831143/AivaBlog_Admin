@@ -8,6 +8,7 @@ Mock.mock('/api/admin/login', 'post', (params) => {
         stateMessage: 'ok',
         body: {
             userInfo: {
+                userId:'@id',
                 userName: 'Aiva',
                 userGroup: 'admin'
             },
@@ -45,7 +46,7 @@ Mock.mock(/\/api\/admin\/home\/getStatistical/, 'get', params => {
 })
 
 // 获取上次登录信息
-Mock.mock(/\/api\/admin\/home\/getLastInfo/, 'get', params => {
+Mock.mock(/\/api\/admin\/home\/getLastInfo/, 'post', params => {
     return Mock.mock({
         stateCode: 0,
         stateMessage: 'ok',

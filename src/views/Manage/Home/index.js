@@ -47,8 +47,13 @@ export default class Home extends Component {
     // 获取上次登录数据
     getLastInfo() {
         Axios({
-            url: '/api/admin/home/getLastInfo'
+            url: '/api/admin/home/getLastInfo',
+            method:'post',
+            data:{
+                userId:JSON.parse(sessionStorage.getItem('userInfo')).userId
+            }
         }).then(res => {
+            res.data.date = new Date(res.data.date).toLocaleString()
             this.setState({
                 lastInfo: res.data
             })

@@ -93,8 +93,8 @@ export default class Login extends Component {
             method: 'post',
             data: {
                 userName: options.userName,
-                userPasswrod: options.password,
-                authCode: options.authCode
+                userPassword: options.password,
+                authCode: options.authCode.toLowerCase()
             }
         }).then(res => {
             sessionStorage.setItem('userInfo', JSON.stringify(res.userInfo))

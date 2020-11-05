@@ -1,6 +1,6 @@
 const envObject = {
     development:{
-        baseUrl:'http://127.0.0.1:7758/'
+        baseUrl:'http://localhost:7758/'
     },
     production:{
         baseUrl:'https://aiva.vip/'
