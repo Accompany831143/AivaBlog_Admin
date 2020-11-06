@@ -106,7 +106,7 @@ Mock.mock(/\/api\/admin\/home\/getUser/, 'get', params => {
         stateMessage: 'ok',
         body: {
             'data|30': [
-                { id: '@id', 'date': "@date", 'num|1-100': 1 }
+                { 'date': "@date", 'num|1-100': 1 }
             ]
         }
     })

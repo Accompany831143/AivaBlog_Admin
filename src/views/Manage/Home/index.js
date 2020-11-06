@@ -4,6 +4,7 @@ import { Chart,Util } from '@antv/g2';
 import Axios from '../../../Axios'
 import { UserOutlined, PictureOutlined, TagOutlined, MessageOutlined } from "@ant-design/icons"
 import http from "axios"
+import Moment from "moment"
 import "./index.css"
 
 export default class Home extends Component {
@@ -53,7 +54,7 @@ export default class Home extends Component {
                 userId:JSON.parse(sessionStorage.getItem('userInfo')).userId
             }
         }).then(res => {
-            res.data.date = new Date(res.data.date).toLocaleString()
+            res.data.date = Moment(res.data.date).format('YYYY-MM-DD HH:mm:ss')
             this.setState({
                 lastInfo: res.data
             })
@@ -241,6 +242,10 @@ export default class Home extends Component {
         Axios({
             url: '/api/admin/home/getUser'
         }).then(res => {
+            res.data = res.data.map(item => {
+                item.date = Moment(item.date).format('YYYY-MM-DD HH:mm:ss')
+                return item
+            })
             this.setState({
                 userData: res.data
             }, () => {
