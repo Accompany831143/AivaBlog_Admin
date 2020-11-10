@@ -3,6 +3,7 @@ import { Table, Drawer, Button, Form, Input, InputNumber, Popconfirm, message, M
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import MenuForm from '../../../components/MenuForm'
 import Axios from "../../../Axios"
+import Moment from "moment"
 import "./index.css"
 export default class Channel extends Component {
     constructor(props) {
@@ -131,6 +132,7 @@ export default class Channel extends Component {
         }).then(res => {
             res.data = res.data.map(item => {
                 item.key = item.cid
+                item.createDate = Moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
             this.setState({
@@ -299,7 +301,7 @@ export default class Channel extends Component {
 
             let url = this.state.editFlag ? '/api/admin/channel/update' : '/api/admin/channel/add'
             if (!this.state.editFlag) {
-                values.createData = new Date().valueOf()
+                values.createDate = new Date().valueOf()
             }
             let msg = this.state.editFlag ? '栏目修改成功！' : '栏目添加成功！'
             Axios({

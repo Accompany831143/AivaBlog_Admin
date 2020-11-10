@@ -111,6 +111,10 @@ export default class Home extends Component {
                 length: 7
             }
         }).then(res => {
+            res.data = res.data.map(item => {
+                item.date = Moment(item.date).format('YYYY-MM-DD HH:mm:ss')
+                return item
+            })
             this.setState({
                 addArticleData: res.data
             }, () => {
@@ -311,6 +315,10 @@ export default class Home extends Component {
                 length: 30
             }
         }).then(res => {
+            res.data = res.data.map(item => {
+                item.date = Moment(item.date).format('YYYY-MM-DD HH:mm:ss')
+                return item
+            })
             this.setState({
                 accessData: res.data
             }, () => {
