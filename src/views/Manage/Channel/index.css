@@ -28,6 +28,7 @@
 }
 .channelDetail>div>span:last-of-type {
     width:70%;
+    color:#424242;
     /* white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis; */

@@ -185,7 +185,8 @@ export default class Channel extends Component {
             if (val) {
                 this.commitSearch()
             } else {
-                message.warning('请输入搜索内容！')
+                // message.warning('请输入搜索内容！')
+                this.getChannel()
             }
         })
 
@@ -203,8 +204,10 @@ export default class Channel extends Component {
         }).then(res => {
             res.data = res.data.map(item => {
                 item.key = item.cid
+                item.createDate = Moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
+
             this.setState({
                 tableData: res.data,
                 pageInfo: {
@@ -232,7 +235,8 @@ export default class Channel extends Component {
             this.state.addForm.current.setFieldsValue({
                 channelName: val.name,
                 channelDesc: val.describe,
-                channelLevel: val.level
+                channelLevel: val.level,
+                cid:val.cid
             })
         })
 
@@ -304,6 +308,7 @@ export default class Channel extends Component {
                 values.createDate = new Date().valueOf()
             }
             let msg = this.state.editFlag ? '栏目修改成功！' : '栏目添加成功！'
+
             Axios({
                 url,
                 method: 'post',
@@ -360,6 +365,9 @@ export default class Channel extends Component {
                     visible={this.state.showAddDrawer}
                 >
                     <Form ref={this.state.addForm} labelCol={{ 'span': 4 }}>
+                        <Form.Item name="cid" style={{display:'none'}}>
+                            <Input type="hidden" />
+                        </Form.Item>
                         <Form.Item label="栏目名称" name="channelName" rules={this.state.validate.channelName}>
                             <Input allowClear maxLength="50" placeholder="请输入栏目名称" />
                         </Form.Item>

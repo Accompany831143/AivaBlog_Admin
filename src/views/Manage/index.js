@@ -147,7 +147,7 @@ export default class Manage extends Component {
                     </Header>
                     <Content style={{ margin: '0 16px',maxHeight:'calc(100vh - 64px - 54px)',overflow:'hidden' }}>
 
-                        <div className="mainContent">
+                        <div id="onlyScroll" className="mainContent">
                             <Switch>
                                 <Route path={"/manage/home"} exact component={Home} />
                                 <Route path={"/manage/channel"} exact component={Channel} />

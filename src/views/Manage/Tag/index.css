@@ -1,0 +1,9 @@
+.tagBox {
+    margin-top:16px;
+}
+.tagBox span {
+    margin-top:6px;
+}
+.ant-tag-close-icon {
+    color:inherit !important;
+}

@@ -25,6 +25,7 @@ export default (options) => {
                     resolve(res.body)
                 }else {
                     message.error(res.stateMessage)
+                    reject()
                 }
             }
         }).catch(err => {
