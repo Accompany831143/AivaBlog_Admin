@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import { Button, Card, Modal, Upload, message } from 'antd'
-import { UploadOutlined } from '@ant-design/icons';
+import {
+    UploadOutlined, 
+    DownloadOutlined,
+    DeleteOutlined,
+} from '@ant-design/icons';
 import "./index.css"
 import Axios from '../../../Axios';
 import Moment from "moment"
 const { Meta } = Card;
 const baseUrl = require('../../../Axios/envConst')
-const pageSize = 8;
 
 export default class Picture extends Component {
     constructor(props) {
@@ -20,7 +23,7 @@ export default class Picture extends Component {
             imgBox: React.createRef(),
             pageInfo: {
                 current: 1,
-                pageSize: pageSize,
+                pageSize: 8,
                 total: 0
             },
             lock: false
@@ -51,8 +54,6 @@ export default class Picture extends Component {
 
     // 获取图片
     getPicture() {
-        console.log('--', this.state.pictureList.length, this.state.pageInfo)
-        console.log('---', this.state.pictureList.length, this.state.pageInfo.total)
         if ((this.state.pictureList.length !== 0) && (this.state.pictureList.length >= this.state.pageInfo.total)) {
             message.info('没有更多了！')
             return
@@ -74,7 +75,7 @@ export default class Picture extends Component {
                 pageInfo: {
                     total: res.pageInfo.total,
                     current: res.pageInfo.current,
-                    pageSize: pageSize
+                    pageSize: this.state.pageInfo.pageSize
                 },
                 lock: false
             })
@@ -98,7 +99,9 @@ export default class Picture extends Component {
             if (sb <= max) {
                 this.setState({
                     pageInfo: {
-                        current: this.state.pageInfo.current + 1
+                        current: this.state.pageInfo.current + 1,
+                        total: this.state.pageInfo.total,
+                        pageSize: this.state.pageInfo.pageSize,
                     },
                     lock: true
                 }, () => {
@@ -124,18 +127,22 @@ export default class Picture extends Component {
                 <div className="picture_box" ref={this.state.imgBox}>
 
                     {
-                        this.state.pictureList.map(item => {
+                        this.state.pictureList.length > 0 ? this.state.pictureList.map(item => {
                             return (
                                 <Card
                                     key={item.uid}
                                     hoverable
                                     className="cardItem"
                                     cover={<img alt="example" src={item.path} />}
+                                    actions={[
+                                        <DownloadOutlined />,   
+                                        <DeleteOutlined />,
+                                    ]}
                                 >
                                     <Meta title={<p className="ellipsis" title={item.path}>{item.path}</p>} description={'上传于 ' + item.uploadTime} />
                                 </Card>
                             )
-                        }, this)
+                        }, this) : <div className="emptyText">暂无数据</div>
 
                     }
 

@@ -16,3 +16,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
 }
+.emptyText {
+    width:100%;
+    text-align: center;
+    color:#999;
+    line-height:100px;
+}
