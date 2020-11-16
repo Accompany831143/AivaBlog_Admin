@@ -6,6 +6,9 @@
 }
 .manage_home {
     padding-right: 16px;
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 .home_summary ul {
     display:flex;

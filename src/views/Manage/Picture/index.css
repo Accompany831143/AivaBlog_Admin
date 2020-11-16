@@ -1,8 +1,18 @@
+.pictureManage {
+    height: 100%;
+}
 .picture_box {
     margin-top: 16px;
+    height:100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.cardWapper{
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    position: relative;
+    padding-bottom: 130px;
 }
 
 .cardItem {
@@ -22,3 +32,9 @@
     color:#999;
     line-height:100px;
 }
+.demo-loading-container {
+    position: absolute;
+    bottom: 60px;
+    width: 100%;
+    text-align: center;
+  }
