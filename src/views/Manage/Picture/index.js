@@ -80,10 +80,19 @@ export default class Picture extends Component {
                 pageSize: this.state.pageInfo.pageSize
             }
         }).then(res => {
+            if(res.result.length <= 0) {
+                message.info('暂无数据！')
+                this.setState({
+                    hasMore: false,
+                    loading: false,
+                });
+                return
+            }
             res.result = res.result.map(item => {
                 item.uploadTime = Moment(item.uploadTime).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
+            
             let arr = flag ? res.result : this.state.pictureList.concat(res.result)
             this.setState({
                 pictureList: arr,

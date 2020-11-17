@@ -96,7 +96,7 @@ export default class TagComponent extends Component {
                     {
                         this.state.tagList.map(item => {
                             return (
-                                <Tag closable color={item.tagColor} onClose={this.deleteTag.bind(this,item.tagId)} style={{ color: item.tagFontColor,display:'inline-block' }}>{item.tagName}</Tag>
+                                <Tag key={item.tagId} closable color={item.tagColor} onClose={this.deleteTag.bind(this,item.tagId)} style={{ color: item.tagFontColor,display:'inline-block' }}>{item.tagName}</Tag>
                             )
                         })
                     }
