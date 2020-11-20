@@ -3,7 +3,8 @@ import { Button, Card, Modal, Upload, message, Image, Spin } from 'antd'
 import {
     UploadOutlined,
     DownloadOutlined,
-    DeleteOutlined
+    DeleteOutlined,
+    CopyOutlined
 } from '@ant-design/icons';
 import InfiniteScroll from 'react-infinite-scroller';
 import "./index.css"
@@ -80,7 +81,7 @@ export default class Picture extends Component {
                 pageSize: this.state.pageInfo.pageSize
             }
         }).then(res => {
-            if(res.result.length <= 0) {
+            if (res.result.length <= 0) {
                 message.info('暂无数据！')
                 this.setState({
                     hasMore: false,
@@ -92,7 +93,7 @@ export default class Picture extends Component {
                 item.uploadTime = Moment(item.uploadTime).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
-            
+
             let arr = flag ? res.result : this.state.pictureList.concat(res.result)
             this.setState({
                 pictureList: arr,
@@ -173,7 +174,7 @@ export default class Picture extends Component {
         this.getPicture()
     }
 
-    
+
     changeStatus() {
         this.setState({
             pageInfo: {
@@ -185,6 +186,24 @@ export default class Picture extends Component {
         }, () => {
             this.getPicture(true)
         })
+    }
+
+    copyPath(path) {
+
+        let inp = document.createElement('input')
+        inp.setAttribute('value',path)
+        inp.setAttribute('readonly','readonly')
+        document.body.appendChild(inp)
+        inp.select()
+
+        if(document.execCommand('Copy')){
+            document.execCommand('Copy')
+            message.success('复制成功！')
+
+        }else {
+            message.warn('您的浏览器不支持复制功能！')
+        }
+        document.body.removeChild(inp)
     }
 
     componentDidMount() {
@@ -224,6 +243,8 @@ export default class Picture extends Component {
                                         />}
                                         // cover={<img alt="example" src={item.path} />}
                                         actions={[
+                                            <CopyOutlined onClick={this.copyPath.bind(this, item.path)} />,
+
                                             <DownloadOutlined onClick={this.downLoadImg.bind(this, item.path)} />,
                                             <DeleteOutlined onClick={this.deleteImg.bind(this, item.uid)} />,
                                         ]}
@@ -235,11 +256,11 @@ export default class Picture extends Component {
                             }, this) : <div className="emptyText">暂无数据</div>
                         }
 
-                            {this.state.loading && this.state.hasMore ? <div className="demo-loading-container">
-                                <Spin tip="疯狂加载中" />
-                            </div> : ''}
-                            
-                        
+                        {this.state.loading && this.state.hasMore ? <div className="demo-loading-container">
+                            <Spin tip="疯狂加载中" />
+                        </div> : ''}
+
+
 
 
 
