@@ -35,13 +35,71 @@ export default class Manage extends Component {
         this.state = {
             collapsed: false,
             userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {},
-            timeInfo:'',
-            timer1:null
+            timeInfo: '',
+            timer1: null,
+            menuList: [
+                {
+                    path: '/home',
+                    title: '首页',
+                    key:'home',
+                    component: Home,
+                    icon: <HomeOutlined />
+                },
+                {
+                    path: '/channel',
+                    title: '栏目管理',
+                    key:'channel',
+                    component: Channel,
+                    icon: <MenuOutlined />
+                },
+                {
+                    path: '/article',
+                    title: '文章管理',
+                    key:'article',
+                    component: Article,
+                    icon: <ReadOutlined />
+                },
+                {
+                    path: '/tag',
+                    title: '标签管理',
+                    key:'tag',
+                    component: Tag,
+                    icon: <TagsOutlined />
+                },
+                {
+                    path: '/picture',
+                    title: '图片管理',
+                    key:'picture',
+                    component: Picture,
+                    icon: <PictureOutlined />
+                },
+                {
+                    path: '/user',
+                    title: '用户管理',
+                    key:'user',
+                    component: User,
+                    icon: <UserOutlined />
+                },
+                {
+                    path: '/message',
+                    title: '留言管理',
+                    key:'message',
+                    component: Message,
+                    icon: <MessageOutlined />
+                },
+                {
+                    path: '/admin',
+                    title: '管理员设置',
+                    key:'admin',
+                    component: Admin,
+                    icon: <SettingOutlined />
+                },
+            ]
         }
     }
 
-    
-    
+
+
     componentDidMount() {
         this.getTime()
         let userInfo = JSON.parse(sessionStorage.getItem('loginInfo'))
@@ -82,13 +140,13 @@ export default class Manage extends Component {
             let M = addZero(t.getMinutes())
             let S = addZero(t.getSeconds())
 
-            let week = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六'][t.getDay()]
+            let week = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'][t.getDay()]
             timeStr = `${Y}年${m}月${d}日 ${week} ${H}:${M}:${S}`
             this.setState({
-                timeInfo:timeStr
+                timeInfo: timeStr
             })
-        },1000)
-        
+        }, 1000)
+
     }
 
     // 用户退出
@@ -109,20 +167,16 @@ export default class Manage extends Component {
                         <img src={AivaLogo} width="50%" />
                     </div>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['/home']}>
-                        <Menu.Item key="/home" onClick={this.viewChange.bind(this)} icon={<HomeOutlined />}>首页</Menu.Item>
-                        <Menu.Item key="/channel" onClick={this.viewChange.bind(this)} icon={<MenuOutlined />}>栏目管理</Menu.Item>
+                        {
+                            this.state.menuList.map(item => {
+                                return <Menu.Item key={item.path} onClick={this.viewChange.bind(this)} icon={item.icon}>{item.title}</Menu.Item>
+                            })
+                        }
                         {/* <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
                             <Menu.Item key="6">Team 1</Menu.Item>
                             <Menu.Item key="8">Team 2</Menu.Item>
                         </SubMenu> */}
-                        <Menu.Item key="/article" onClick={this.viewChange.bind(this)} icon={<ReadOutlined />}>文章管理</Menu.Item>
-                        <Menu.Item key="/tag" onClick={this.viewChange.bind(this)} icon={<TagsOutlined />}>标签管理</Menu.Item>
-                        <Menu.Item key="/picture" onClick={this.viewChange.bind(this)} icon={<PictureOutlined />}>图片管理</Menu.Item>
-                        <Menu.Item key="/user" onClick={this.viewChange.bind(this)} icon={<UserOutlined />}>用户管理</Menu.Item>
-                        <Menu.Item key="/message" onClick={this.viewChange.bind(this)} icon={<MessageOutlined />}>留言管理</Menu.Item>
-                        <Menu.Item key="/admin" onClick={this.viewChange.bind(this)} icon={<SettingOutlined />}>管理员设置</Menu.Item>
 
-                        
                     </Menu>
                 </Sider>
                 <Layout className="site-layout">
@@ -145,18 +199,15 @@ export default class Manage extends Component {
                             </div>
                         </div>
                     </Header>
-                    <Content style={{ margin: '0 16px',maxHeight:'calc(100vh - 64px - 54px)',overflow:'hidden' }}>
+                    <Content style={{ margin: '0 16px', maxHeight: 'calc(100vh - 64px - 54px)', overflow: 'hidden' }}>
 
                         <div id="onlyScroll" className="mainContent">
                             <Switch>
-                                <Route path={"/manage/home"} exact component={Home} />
-                                <Route path={"/manage/channel"} exact component={Channel} />
-                                <Route path={"/manage/article"} exact component={Article} />
-                                <Route path={"/manage/tag"} exact component={Tag} />
-                                <Route path={"/manage/picture"} exact component={Picture} />
-                                <Route path={"/manage/user"} exact component={User} />
-                                <Route path={"/manage/admin"} exact component={Admin} />
-                                <Route path={"/manage/message"} exact component={Message} />
+                                {
+                                    this.state.menuList.map(item => {
+                                        return <Route path={"/manage"+item.path} exact component={item.component} />
+                                    })
+                                }
                                 <Redirect from='/manage' exact to={"/manage/home"} />
                                 <Route component={Home} />
                             </Switch>
