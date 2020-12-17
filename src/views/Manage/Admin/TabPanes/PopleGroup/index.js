@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table, Drawer, Button, Form, Input, Popconfirm, message, Modal, TreeSelect } from 'antd';
+import { Table, Drawer, Button, Form, Input, Popconfirm, message, Modal, TreeSelect,Tag } from 'antd';
 import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import MenuForm from '../../../../../components/MenuForm'
 import Axios from "../../../../../Axios"
@@ -32,14 +32,14 @@ export default class PopleGroup extends Component {
                     ellipsis: true
 
                 },
-                {
-                    title: '用户组权限',
-                    dataIndex: 'permissions',
-                    key: 'permissions',
-                    align: 'center',
-                    ellipsis: true
+                // {
+                //     title: '用户组权限',
+                //     dataIndex: 'permissions',
+                //     key: 'permissions',
+                //     align: 'center',
+                //     ellipsis: true
 
-                },
+                // },
                 {
                     title: '创建时间',
                     dataIndex: 'createDate',
@@ -134,7 +134,7 @@ export default class PopleGroup extends Component {
                             title: '菜单2',
                             value: 'key2',
                             key: 'key2',
-                            children:[
+                            children: [
                                 {
                                     title: '菜单2-1',
                                     value: 'key2-1',
@@ -149,8 +149,34 @@ export default class PopleGroup extends Component {
                         },
                     ],
                 },
-            ]
+            ],
+            menuData:[]
         }
+    }
+
+    // 获取所有菜单数据
+    getAllMenu() {
+        Axios({
+            url: '/api/admin/adminGroup/allMenu'
+        }).then(res => {
+            let arr = res.data.map(item => {
+                if (item.children && Array.isArray(item.children) && item.children[0]) {
+                    item.children.forEach(item => {
+                        item.value = item.uid
+                        item.key = item.uid
+                    })
+
+                }
+                item.value = item.uid
+                item.key = item.uid
+                return item
+
+            })
+            this.setState({
+                treeData: arr,
+                menuData:res.data
+            })
+        })
     }
 
     // 获取用户组数据
@@ -267,7 +293,7 @@ export default class PopleGroup extends Component {
             this.state.addForm.current.setFieldsValue({
                 PopleGroupName: val.name,
                 PopleGroupDesc: val.describe,
-                PopleGroupLevel: val.level,
+                permissions: val.permissions,
                 cid: val.cid
             })
         })
@@ -331,16 +357,12 @@ export default class PopleGroup extends Component {
     // 添加文章提交
     commitAdd() {
         this.state.addForm.current.validateFields().then(values => {
-            if (!values.PopleGroupLevel) {
-                values.PopleGroupLevel = 0
-            }
 
             let url = this.state.editFlag ? '/api/admin/PopleGroup/update' : '/api/admin/PopleGroup/add'
             if (!this.state.editFlag) {
                 values.createDate = new Date().valueOf()
             }
             let msg = this.state.editFlag ? '用户组修改成功！' : '用户组添加成功！'
-
             Axios({
                 url,
                 method: 'post',
@@ -365,6 +387,7 @@ export default class PopleGroup extends Component {
 
     componentDidMount() {
         this.getPoplegroupData()
+        this.getAllMenu()
     }
 
 
@@ -382,7 +405,7 @@ export default class PopleGroup extends Component {
         </div>)
 
         const tProps = {
-            treeData:this.state.treeData,
+            treeData: this.state.treeData,
             treeCheckable: true,
             showCheckedStrategy: SHOW_PARENT,
             placeholder: '请配置菜单',
@@ -417,7 +440,7 @@ export default class PopleGroup extends Component {
                             <Input.TextArea showCount allowClear maxLength="255" placeholder="请输入用户组描述" />
                         </Form.Item>
                         <Form.Item label="菜单配置" name="permissions">
-                            <TreeSelect {...tProps} />
+                            <TreeSelect {...tProps}  />
                         </Form.Item>
                     </Form>
                 </Drawer>
@@ -438,8 +461,20 @@ export default class PopleGroup extends Component {
                             <span>{this.state.detailInfo.describe}</span>
                         </div>
                         <div>
-                            <span>用户组级别：</span>
-                            <span>{this.state.detailInfo.level}</span>
+                            <span>用户组权限：</span>
+                            <span>
+                                {
+                                    this.state.detailInfo.permissions && this.state.detailInfo.permissions.map(item => {
+                                        let title = ''
+                                        this.state.menuData.forEach(el => {
+                                            if(el.value === item) {
+                                                title =  el.title
+                                            }
+                                        })
+                                        return <Tag color="blue" key={title}>{title}</Tag>
+                                    })
+                                }
+                            </span>
                         </div>
                         <div>
                             <span>创建时间：</span>

@@ -11,7 +11,9 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     MessageOutlined,
-    SettingOutlined
+    SettingOutlined,
+    UserSwitchOutlined,
+    UsergroupAddOutlined
 } from '@ant-design/icons';
 
 import Home from "./Home";
@@ -20,14 +22,15 @@ import Article from "./Article";
 import Tag from "./Tag";
 import Picture from "./Picture";
 import User from "./User";
-import Admin from "./Admin";
 import Message from "./Message";
+import UserSetting from './Admin/TabPanes/PopleSettings'
+import userGroupSetting from './Admin/TabPanes/PopleGroup'
 
 import AivaLogo from '../../images/Aiva.png';
 import "./index.css"
 
 const { Header, Content, Footer, Sider } = Layout;
-// const { SubMenu } = Menu;
+const { SubMenu } = Menu;
 
 export default class Manage extends Component {
     constructor(props) {
@@ -41,58 +44,73 @@ export default class Manage extends Component {
                 {
                     path: '/home',
                     title: '首页',
-                    key:'home',
+                    key: 'home',
                     component: Home,
                     icon: <HomeOutlined />
                 },
                 {
                     path: '/channel',
                     title: '栏目管理',
-                    key:'channel',
+                    key: 'channel',
                     component: Channel,
                     icon: <MenuOutlined />
                 },
                 {
                     path: '/article',
                     title: '文章管理',
-                    key:'article',
+                    key: 'article',
                     component: Article,
                     icon: <ReadOutlined />
                 },
                 {
                     path: '/tag',
                     title: '标签管理',
-                    key:'tag',
+                    key: 'tag',
                     component: Tag,
                     icon: <TagsOutlined />
                 },
                 {
                     path: '/picture',
                     title: '图片管理',
-                    key:'picture',
+                    key: 'picture',
                     component: Picture,
                     icon: <PictureOutlined />
                 },
                 {
                     path: '/user',
                     title: '用户管理',
-                    key:'user',
+                    key: 'user',
                     component: User,
                     icon: <UserOutlined />
                 },
                 {
                     path: '/message',
                     title: '留言管理',
-                    key:'message',
+                    key: 'message',
                     component: Message,
                     icon: <MessageOutlined />
                 },
                 {
                     path: '/admin',
                     title: '管理员设置',
-                    key:'admin',
-                    component: Admin,
-                    icon: <SettingOutlined />
+                    key: 'admin',
+                    icon: <SettingOutlined />,
+                    children: [
+                        {
+                            path: '/admin/userSetting',
+                            title: '成员设置',
+                            key: 'userSetting',
+                            component: UserSetting,
+                            icon: <UserSwitchOutlined />,
+                        },
+                        {
+                            path: '/admin/groupSetting',
+                            title: '用户组设置',
+                            key: 'groupSetting',
+                            component: userGroupSetting,
+                            icon: <UsergroupAddOutlined />,
+                        },
+                    ]
                 },
             ]
         }
@@ -169,7 +187,19 @@ export default class Manage extends Component {
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['/home']}>
                         {
                             this.state.menuList.map(item => {
-                                return <Menu.Item key={item.path} onClick={this.viewChange.bind(this)} icon={item.icon}>{item.title}</Menu.Item>
+                                if (item.children && Array.isArray(item.children) && item.children[0]) {
+                                    return <SubMenu key={item.key} icon={item.icon} title={item.title}>
+                                        {item.children.map(item => {
+                                            return <Menu.Item key={item.path} onClick={this.viewChange.bind(this)} icon={item.icon}>{item.title}</Menu.Item>
+
+                                        })}
+
+                                    </SubMenu>
+
+
+                                } else {
+                                    return <Menu.Item key={item.path} onClick={this.viewChange.bind(this)} icon={item.icon}>{item.title}</Menu.Item>
+                                }
                             })
                         }
                         {/* <SubMenu key="sub2" icon={<TeamOutlined />} title="Team">
@@ -205,7 +235,14 @@ export default class Manage extends Component {
                             <Switch>
                                 {
                                     this.state.menuList.map(item => {
-                                        return <Route path={"/manage"+item.path} exact component={item.component} />
+                                        if(item.children && Array.isArray(item.children) && item.children[0]) {
+                                            return item.children.map(item => {
+                                                return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
+                                            })
+                                        }else {
+                                            return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
+                                        }
+                                        
                                     })
                                 }
                                 <Redirect from='/manage' exact to={"/manage/home"} />
