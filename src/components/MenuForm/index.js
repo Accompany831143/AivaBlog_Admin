@@ -1,3 +1,9 @@
+/*
+ * @Date: 2020-11-14 20:29:33
+ * @LastEditors: Aiva
+ * @LastEditTime: 2020-12-28 12:56:58
+ * @FilePath: \AivaBlog_Admin\src\components\MenuForm\index.js
+ */
 import React, { Component } from 'react';
 
 import { Input, Button } from 'antd';
@@ -42,10 +48,12 @@ export default class MenuForm extends Component {
                     <Search enterButton={'搜索'} style={{ width: 260 }} allowClear value={this.state.keyword} onSearch={this.searchTitle.bind(this)} placeholder="请输入搜索内容" onChange={this.changeSearchTitle.bind(this)} />
 
                 </div>
-                <div className="btnsWrapper">
+                {this.props.noShowBtn === undefined ? <div className="btnsWrapper">
+                    
                     <Button type="primary" onClick={this.addHandler.bind(this)}>新建</Button>
                     <Button type="danger" onClick={this.removeHandler.bind(this)}>删除</Button>
-                </div>
+                </div> : ''}
+                
             </div>
         )
     }

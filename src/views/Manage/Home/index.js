@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { message } from 'antd'
-import { Chart,Util } from '@antv/g2';
+import { Chart, Util } from '@antv/g2';
 import Axios from '../../../Axios'
 import { UserOutlined, PictureOutlined, TagOutlined, MessageOutlined } from "@ant-design/icons"
 import http from "axios"
@@ -13,13 +13,13 @@ export default class Home extends Component {
         this.state = {
             userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
             gdKey: '91f9a6eeb51088c2e9f9283aa50ecafa',
-            statistical:{},
+            statistical: {},
             weatherInfo: {},
             accessData: [],
             addArticleData: [],
             articleMapData: [],
-            userData:[],
-            lastInfo:{}
+            userData: [],
+            lastInfo: {}
         }
     }
 
@@ -49,12 +49,12 @@ export default class Home extends Component {
     getLastInfo() {
         Axios({
             url: '/api/admin/home/getLastInfo',
-            method:'post',
-            data:{
-                userId:JSON.parse(sessionStorage.getItem('userInfo')).userId
+            method: 'post',
+            data: {
+                userId: JSON.parse(sessionStorage.getItem('userInfo')).userId
             }
         }).then(res => {
-            res.data.date = Moment(res.data.date).format('YYYY-MM-DD HH:mm:ss')
+            res.data.date = res.data.date ? Moment(res.data.date).format('YYYY-MM-DD HH:mm:ss') : '暂无'
             this.setState({
                 lastInfo: res.data
             })
@@ -106,13 +106,10 @@ export default class Home extends Component {
     // 请求新增文章数据
     getAddArticleData(fn) {
         Axios({
-            url: '/api/admin/home/getAddArticle',
-            params: {
-                length: 7
-            }
+            url: '/api/admin/home/getAddArticle'
         }).then(res => {
             res.data = res.data.map(item => {
-                item.date = Moment(item.date).format('YYYY-MM-DD HH:mm:ss')
+                item._id = Moment(item._id).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
             this.setState({
@@ -134,14 +131,14 @@ export default class Home extends Component {
             container: 'addArticleMap',
             autoFit: true,
             height: 260,
-            padding: [50, 0, 0, 0]
+            padding: [50, 50, 0]
         });
         chart.data(data);
         chart.scale({
-            date: {
+            _id: {
                 nice: true
             },
-            num: {
+            getNum: {
                 alias: '新增文章数量 ',
             }
         })
@@ -149,7 +146,7 @@ export default class Home extends Component {
 
 
 
-        chart.interval().position('date*num');
+        chart.interval().position('_id*getNum');
         chart.interaction('element-active');
 
         // 添加文本标注
@@ -183,15 +180,29 @@ export default class Home extends Component {
         chart.coordinate('theta', {
             radius: 0.75
         });
+        // chart.tooltip({
+        //     showMarkers: false
+        // });
         chart.tooltip({
-            showMarkers: false
+            showMarkers: false,
+
+        });
+        chart.scale({
+            percent: {
+                formatter: (val) => {
+                    val = val + '%';
+                    return val;
+                },
+            },
+
+
         });
 
         const interval = chart
             .interval()
             .adjust('stack')
-            .position('value')
-            .color('type')
+            .position('percent')
+            .color('_id')
             .style({ opacity: 0.4 })
             .state({
                 active: {
@@ -203,21 +214,21 @@ export default class Home extends Component {
                     }
                 }
             })
-            .label('type', (val) => {
+            .label('_id', (val) => {
                 return {
                     offset: -30,
                     style: {
-                        opacity:1,
+                        opacity: 1,
                         fill: 'white',
                         fontSize: 12,
                         shadowBlur: 2,
                         shadowColor: 'rgba(0, 0, 0, .45)',
                     },
                     content: (obj) => {
-                        return obj.value + '%';
+                        return obj.percent + '%';
                     },
                 };
-            });
+            })
 
         chart.interaction('element-single-selected');
 
@@ -247,7 +258,7 @@ export default class Home extends Component {
             url: '/api/admin/home/getUser'
         }).then(res => {
             res.data = res.data.map(item => {
-                item.date = Moment(item.date).format('YYYY-MM-DD HH:mm:ss')
+                item._id = Moment(item._id).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
             this.setState({
@@ -273,10 +284,10 @@ export default class Home extends Component {
 
         chart.data(data);
         chart.scale({
-            date: {
+            _id: {
                 nice: true,
             },
-            num: {
+            getNum: {
                 nice: true
             },
         });
@@ -285,22 +296,21 @@ export default class Home extends Component {
             showCrosshairs: true,
             shared: true,
             itemTpl: `<div>
-                        <p>注册人数：{num}</p>
+                        <p>注册人数：{getNum}</p>
                       </div>`,
         });
         chart.option('slider', {
-            end: 1
+            end: 0.8
         });
 
 
-        chart.area().position('date*num').tooltip('date*num', (date, num) => {
+        chart.line().position('_id*getNum').tooltip('_id*getNum', (_id, getNum) => {
             return {
-                date,
-                num,
+                _id,
+                getNum,
             };
-        })
-        chart.point().position('date*num').shape('circle');
-        chart.line().position('date*num');
+        }).shape('smooth');
+        chart.point().position('_id*getNum').shape('circle');
 
 
         chart.render();
@@ -310,10 +320,7 @@ export default class Home extends Component {
     // 获取访问量数据
     getAccessData(fn) {
         Axios({
-            url: '/api/admin/home/getAccess',
-            params: {
-                length: 30
-            }
+            url: '/api/admin/home/getAccess'
         }).then(res => {
             res.data = res.data.map(item => {
                 item.date = Moment(item.date).format('YYYY-MM-DD HH:mm:ss')
@@ -341,10 +348,10 @@ export default class Home extends Component {
 
         chart.data(data);
         chart.scale({
-            date: {
+            _id: {
                 nice: true,
             },
-            num: {
+            getNum: {
                 nice: true
             },
         });
@@ -353,7 +360,7 @@ export default class Home extends Component {
             showCrosshairs: true,
             shared: true,
             itemTpl: `<div>
-                        <p>访问量：{num}</p>
+                        <p>访问量：{getNum}</p>
                       </div>`,
         });
         chart.option('slider', {
@@ -361,13 +368,13 @@ export default class Home extends Component {
         });
 
 
-        chart.line().position('date*num').tooltip('date*num', (date, num) => {
+        chart.line().position('_id*getNum').tooltip('_id*getNum', (_id, getNum) => {
             return {
-                date,
-                num,
+                _id,
+                getNum,
             };
         }).shape('smooth');
-        chart.point().position('date*num').shape('circle');
+        chart.point().position('_id*getNum').shape('circle');
 
 
         chart.render();
@@ -380,9 +387,9 @@ export default class Home extends Component {
             <div className="manage_home">
                 <div>
                     <h2>欢迎您，{this.state.userInfo.userName}</h2>
-                    <p style={{color:'#999'}}>
-                        <span>上次登录IP：{this.state.lastInfo.ip}</span>
-                        <span style={{marginLeft:16}}>登录时间：{this.state.lastInfo.date}</span>
+                    <p style={{ color: '#999' }}>
+                        <span>上次登录IP：{this.state.lastInfo.ip || '暂无'}</span>
+                        <span style={{ marginLeft: 16 }}>登录时间：{this.state.lastInfo.date}</span>
                     </p>
                     <p>
                         今天
@@ -454,11 +461,11 @@ export default class Home extends Component {
                 </div>
                 <div className="caMap">
                     <div>
-                        <h2>近期新增文章数据</h2>
+                        <h2>新增文章数据统计</h2>
                         <div id="addArticleMap"></div>
                     </div>
                     <div>
-                        <h2>文章统计</h2>
+                        <h2>文章占比统计</h2>
                         <div id="articleMap"></div>
                     </div>
                 </div>

@@ -1,6 +1,8 @@
 import React, { Component } from "react"
 import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import { Layout, Menu } from 'antd';
+
+import Axios from "../../Axios"
 import {
     HomeOutlined,
     MenuOutlined,
@@ -40,7 +42,8 @@ export default class Manage extends Component {
             userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {},
             timeInfo: '',
             timer1: null,
-            menuList: [
+            menuList: [],
+            menuInfo:[
                 {
                     path: '/home',
                     title: '首页',
@@ -125,6 +128,7 @@ export default class Manage extends Component {
             let { history } = this.props
             history.push('/')
         }
+        this.getMenu()
     }
 
 
@@ -167,10 +171,39 @@ export default class Manage extends Component {
 
     }
 
+    // 获取菜单权限
+    getMenu() {
+        Axios({
+            url:'/api/admin/adminUser/getMenu',
+            method:'post',
+            data:{
+                userId:JSON.parse(sessionStorage.getItem('userInfo')).userId
+            }
+        }).then(res => {
+            let arr = []
+            res.data.forEach(menuItem => {
+                this.state.menuInfo.forEach(item => {
+                    if(menuItem.path === item.path && menuItem.key === item.key) {
+                        arr.push(item)
+                    }
+                })
+            })
+            this.setState({
+                menuList:arr
+            })
+        })
+    }
+
     // 用户退出
     userQuit() {
-        sessionStorage.clear()
-        this.props.history.push('/login')
+        Axios({
+            url: '/api/admin/logout',
+            method: 'post'
+        }).then(res => {
+            sessionStorage.clear()
+            this.props.history.push('/login')
+        })
+
     }
 
 
@@ -235,14 +268,14 @@ export default class Manage extends Component {
                             <Switch>
                                 {
                                     this.state.menuList.map(item => {
-                                        if(item.children && Array.isArray(item.children) && item.children[0]) {
+                                        if (item.children && Array.isArray(item.children) && item.children[0]) {
                                             return item.children.map(item => {
                                                 return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
                                             })
-                                        }else {
+                                        } else {
                                             return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
                                         }
-                                        
+
                                     })
                                 }
                                 <Redirect from='/manage' exact to={"/manage/home"} />

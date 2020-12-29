@@ -50,7 +50,7 @@ export default class Login extends Component {
                             if (value.length <= 0) {
                                 return Promise.reject('请输入验证码')
                             } else {
-                                let reg = /^[abcdefghjkmnpqrstuvwxyzABCDEFGHJKLMNOPQRETUVWXYZ23456789]{4}$/g;
+                                let reg = /^[abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNOPQRETUVWXYZ23456789]{4}$/g;
                                 if (reg.test(value)) {
                                     return Promise.resolve()
                                 } else {

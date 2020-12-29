@@ -201,6 +201,10 @@ export default class PopleSetting extends Component {
                 item.beforeLoginTime = Moment(item.beforeLoginTime).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
+            let userName = JSON.parse(sessionStorage.getItem('userInfo')).userName
+            res.data = res.data.filter(item => {
+                return item.name !== userName
+            })
             this.setState({
                 tableData: res.data,
                 pageInfo: {
@@ -410,6 +414,9 @@ export default class PopleSetting extends Component {
             let msg = this.state.editFlag ? '管理员修改成功！' : '管理员添加成功！'
             // console.log(values, this.state.userGroupVal)
             // return
+            values.userPassword = values.userPassword1
+            delete values.userPassword1
+            delete values.userPassword2
             Axios({
                 url,
                 method: 'post',
@@ -431,6 +438,7 @@ export default class PopleSetting extends Component {
             detailInfo: data
         })
     }
+
 
 
     componentDidMount() {

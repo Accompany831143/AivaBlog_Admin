@@ -1,5 +1,5 @@
 .channelDetail>div {
-    display: block;
+    display: block !important;
     padding:16px;
 }
 
