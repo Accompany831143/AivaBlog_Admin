@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table,Avatar, Modal } from 'antd';
+import { Table,Avatar, Modal,Switch,message } from 'antd';
 import { EyeOutlined, } from '@ant-design/icons'
 import MenuForm from '../../../components/MenuForm'
 import Axios from "../../../Axios"
@@ -53,6 +53,15 @@ export default class Message extends Component {
                     }
                 },
                 {
+                    title: '展示状态',
+                    dataIndex: 'lock',
+                    key: 'lock',
+                    ellipsis: true,
+                    render:(val, data, index) => {
+                        return <Switch defaultChecked={data.lock === '1'} onChange={this.onLockChange.bind(this,data)}  />
+                    }
+                },
+                {
                     title: '操作',
                     dataIndex: 'action',
                     key: 'id',
@@ -102,6 +111,22 @@ export default class Message extends Component {
                     current: res.pageInfo.current
                 }
             })
+        })
+    }
+
+    // 状态更改
+    onLockChange(item,e) {
+        Axios({
+            url:'/api/admin/message/changeStatus',
+            method:'post',
+            data:{
+                id:item.uuid,
+                status:e ? '1' : '0'
+            }
+        }).then(res => {
+            if(res) {
+                message.success('更改成功！')
+            }
         })
     }
 
