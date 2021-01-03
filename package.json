@@ -18,9 +18,10 @@
     "web-vitals": "^0.2.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
+    "start": "cross-env REACT_APP_BASE=development react-scripts start",
+    "build": "cross-env REACT_APP_BASE=production react-scripts build",
     "test": "react-scripts test",
+    "build:test": "cross-env REACT_APP_BASE=test react-scripts build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
@@ -46,6 +47,7 @@
     "@antv/g2": "^4.0.15",
     "antd": "^4.7.3",
     "axios": "^0.21.0",
+    "cross-env": "^7.0.3",
     "mockjs": "^1.1.0",
     "react-router-dom": "^5.2.0"
   }
