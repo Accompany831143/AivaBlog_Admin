@@ -19,9 +19,9 @@
   },
   "scripts": {
     "start": "cross-env REACT_APP_BASE=development react-scripts start",
-    "build": "cross-env REACT_APP_BASE=production react-scripts build",
+    "build": "cross-env REACT_APP_BASE=production react-scripts --max_old_space_size=10240 build",
     "test": "react-scripts test",
-    "build:test": "cross-env REACT_APP_BASE=test react-scripts build",
+    "build:test": "cross-env REACT_APP_BASE=test react-scripts --max_old_space_size=10240 build",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
