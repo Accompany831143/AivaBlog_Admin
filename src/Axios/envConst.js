@@ -9,7 +9,7 @@ const envObject = {
         baseUrl:'http://localhost:7758/'
     },
     test:{
-        baseUrl:'https://192.168.16.130:7758/'
+        baseUrl:'http://192.168.16.130:7758/'
     },
     production:{
         baseUrl:'https://aiva.vip:7758/'
