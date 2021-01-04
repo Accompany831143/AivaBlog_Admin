@@ -1,7 +1,7 @@
 /*
  * @Date: 2020-11-14 20:29:33
  * @LastEditors: Aiva
- * @LastEditTime: 2021-01-04 14:53:33
+ * @LastEditTime: 2021-01-04 17:18:10
  * @FilePath: \AivaBlog_Admin\src\Axios\envConst.js
  */
 const envObject = {
@@ -9,10 +9,10 @@ const envObject = {
         baseUrl:'http://localhost:7758/'
     },
     test:{
-        baseUrl:'https://blog-server:7758/'
+        baseUrl:'https://192.169.16.130:7758/'
     },
     production:{
-        baseUrl:'https://blog-server:7758/'
+        baseUrl:'https://aiva.vip:7758/'
     }
 
 }
