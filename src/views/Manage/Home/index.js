@@ -3,7 +3,6 @@ import { message } from 'antd'
 import { Chart, Util } from '@antv/g2';
 import Axios from '../../../Axios'
 import { UserOutlined, PictureOutlined, TagOutlined, MessageOutlined } from "@ant-design/icons"
-import http from "axios"
 import Moment from "moment"
 import "./index.css"
 
@@ -12,7 +11,6 @@ export default class Home extends Component {
         super(props)
         this.state = {
             userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
-            gdKey: '91f9a6eeb51088c2e9f9283aa50ecafa',
             statistical: {},
             weatherInfo: {},
             accessData: [],
@@ -65,39 +63,13 @@ export default class Home extends Component {
 
     // 请求天气
     getWeather() {
-        new Promise((resolve, reject) => {
-            http({
-                url: 'https://restapi.amap.com/v3/ip',
-                params: {
-                    key: this.state.gdKey
-                }
-            }).then(res => {
-                res = res.data
-                resolve(res.adcode)
-            }).catch(err => {
-                console.log('获取位置信息失败', err)
-                message.error('获取位置信息失败')
-            })
-        }).then(code => {
-            http({
-                url: 'https://restapi.amap.com/v3/weather/weatherInfo',
-                params: {
-                    key: this.state.gdKey,
-                    city: code
-                }
-            }).then(res => {
-                res = res.data
-                if (res.status === '1') {
-                    this.setState({
-                        weatherInfo: res.lives[0]
-                    })
-                } else {
-                    console.log('获取天气信息失败', res)
-                    message.error('获取天气信息失败')
-                }
-            }).catch(err => {
-                console.log('获取天气信息失败', err)
-                message.error('获取天气信息失败')
+        Axios({
+            url: '/api/admin/home/getWeatherInfo',
+            method:'post'
+        }).then(res => {
+            res = res.lives[0]
+            this.setState({
+                weatherInfo: res
             })
         })
 
@@ -262,7 +234,7 @@ export default class Home extends Component {
                 return item
             })
             this.setState({
-                userData: res.data
+                userData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
             }, () => {
                 if (fn) {
                     fn()
@@ -327,7 +299,7 @@ export default class Home extends Component {
                 return item
             })
             this.setState({
-                accessData: res.data
+                accessData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
             }, () => {
                 if (fn) {
                     fn()
@@ -393,6 +365,7 @@ export default class Home extends Component {
                     </p>
                     <p>
                         今天
+                        &nbsp;
                         {this.state.weatherInfo.city}
                         &nbsp;
                         <b>{this.state.weatherInfo.weather}</b>，
