@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { HashRouter as Router, Route, Redirect, } from 'react-router-dom'
+import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
 import { Layout, Menu } from 'antd';
 
 import Axios from "../../Axios"
@@ -43,7 +43,7 @@ export default class Manage extends Component {
             timeInfo: '',
             timer1: null,
             menuList: [],
-            menuInfo:[
+            menuInfo: [
                 {
                     path: '/home',
                     title: '首页',
@@ -174,22 +174,22 @@ export default class Manage extends Component {
     // 获取菜单权限
     getMenu() {
         Axios({
-            url:'/api/admin/adminUser/getMenu',
-            method:'post',
-            data:{
-                userId:JSON.parse(sessionStorage.getItem('userInfo')).userId
+            url: '/api/admin/adminUser/getMenu',
+            method: 'post',
+            data: {
+                userId: JSON.parse(sessionStorage.getItem('userInfo')).userId
             }
         }).then(res => {
             let arr = []
             res.data.forEach(menuItem => {
                 this.state.menuInfo.forEach(item => {
-                    if(menuItem.path === item.path && menuItem.key === item.key) {
+                    if (menuItem.path === item.path && menuItem.key === item.key) {
                         arr.push(item)
                     }
                 })
             })
             this.setState({
-                menuList:arr
+                menuList: arr
             })
         })
     }
@@ -266,20 +266,22 @@ export default class Manage extends Component {
 
                         <div id="onlyScroll" className="mainContent">
                             <Router>
-                                {
-                                    this.state.menuList.map(item => {
-                                        if (item.children && Array.isArray(item.children) && item.children[0]) {
-                                            return item.children.map(item => {
+                                <Switch>
+                                    {
+                                        this.state.menuList.map(item => {
+                                            if (item.children && Array.isArray(item.children) && item.children[0]) {
+                                                return item.children.map(item => {
+                                                    return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
+                                                })
+                                            } else {
                                                 return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
-                                            })
-                                        } else {
-                                            return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
-                                        }
+                                            }
 
-                                    })
-                                }
-                                <Redirect from='/manage' exact to={"/manage/home"} />
-                                <Route component={Home} />
+                                        })
+                                    }
+                                    <Redirect from='/manage' exact to={"/manage/home"} />
+                                    <Route component={Home} />
+                                </Switch>
                             </Router>
                         </div>
                     </Content>
