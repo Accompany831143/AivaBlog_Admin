@@ -105,7 +105,7 @@ export default class Channel extends Component {
             }
         }).then(res => {
             res.data = res.data.map(item => {
-                item.key = item.cid
+                item.key = item._id
                 item.createDate = Moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
                 item.userAvatar = item.userAvatar.replace(/\\/g,
                     '/')

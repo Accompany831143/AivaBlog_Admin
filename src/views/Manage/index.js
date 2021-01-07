@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import { HashRouter as Router, Route, Redirect, } from 'react-router-dom'
 import { Layout, Menu } from 'antd';
 
 import Axios from "../../Axios"
@@ -265,7 +265,7 @@ export default class Manage extends Component {
                     <Content style={{ margin: '0 16px', maxHeight: 'calc(100vh - 64px - 54px)', overflow: 'hidden' }}>
 
                         <div id="onlyScroll" className="mainContent">
-                            <Switch>
+                            <Router>
                                 {
                                     this.state.menuList.map(item => {
                                         if (item.children && Array.isArray(item.children) && item.children[0]) {
@@ -280,7 +280,7 @@ export default class Manage extends Component {
                                 }
                                 <Redirect from='/manage' exact to={"/manage/home"} />
                                 <Route component={Home} />
-                            </Switch>
+                            </Router>
                         </div>
                     </Content>
                     <Footer>Copyright © 2020 By Aiva. All Rights Reserved</Footer>

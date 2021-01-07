@@ -85,7 +85,7 @@ export default class Home extends Component {
                 return item
             })
             this.setState({
-                addArticleData: res.data
+                addArticleData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
             }, () => {
                 if (fn) {
                     fn()
@@ -214,7 +214,7 @@ export default class Home extends Component {
             url: '/api/admin/home/getArticle',
         }).then(res => {
             this.setState({
-                articleMapData: res.data
+                articleMapData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
             }, () => {
                 if (fn) {
                     fn()
@@ -260,28 +260,17 @@ export default class Home extends Component {
                 nice: true,
             },
             getNum: {
-                nice: true
-            },
-        });
+                nice: true,
+                alias:'访问量',
 
-        chart.tooltip({
-            showCrosshairs: true,
-            shared: true,
-            itemTpl: `<div>
-                        <p>注册人数：{getNum}</p>
-                      </div>`,
+            },
         });
         chart.option('slider', {
             end: 0.8
         });
 
 
-        chart.line().position('_id*getNum').tooltip('_id*getNum', (_id, getNum) => {
-            return {
-                _id,
-                getNum,
-            };
-        }).shape('smooth');
+        chart.line().position('_id*getNum').shape('smooth');
         chart.point().position('_id*getNum').shape('circle');
 
 
@@ -324,28 +313,21 @@ export default class Home extends Component {
                 nice: true,
             },
             getNum: {
-                nice: true
+                nice: true,
+                alias:'访问量',
             },
         });
 
         chart.tooltip({
             showCrosshairs: true,
-            shared: true,
-            itemTpl: `<div>
-                        <p>访问量：{getNum}</p>
-                      </div>`,
+            shared: true
         });
         chart.option('slider', {
             end: 0.8
         });
 
 
-        chart.line().position('_id*getNum').tooltip('_id*getNum', (_id, getNum) => {
-            return {
-                _id,
-                getNum,
-            };
-        }).shape('smooth');
+        chart.line().position('_id*getNum').shape('smooth')
         chart.point().position('_id*getNum').shape('circle');
 
 
