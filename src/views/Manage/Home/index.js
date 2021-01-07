@@ -261,7 +261,7 @@ export default class Home extends Component {
             },
             getNum: {
                 nice: true,
-                alias:'访问量',
+                alias:'注册人数',
 
             },
         });
