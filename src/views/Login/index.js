@@ -61,7 +61,8 @@ export default class Login extends Component {
                     }
                 ],
             },
-            authCode: ''
+            authCode: '',
+            formElement:React.createRef()
         }
     }
 
@@ -102,6 +103,9 @@ export default class Login extends Component {
             let { history } = this.props
             message.success('登录成功！')
             history.push('/manage')
+        }).catch(() => {
+            this.getAuthCode()
+            this.state.formElement.current.resetFields()
         })
     }
 
@@ -118,7 +122,7 @@ export default class Login extends Component {
                 <div className="container">
                     <div className="loginBox">
                         <h1>Aiva博客后台管理系统</h1>
-                        <Form labelCol={{ 'span': 4 }} onFinish={this.onFinish.bind(this)}>
+                        <Form ref={this.state.formElement} labelCol={{ 'span': 4 }} onFinish={this.onFinish.bind(this)}>
                             <Form.Item label="用户名" name="userName" rules={this.state.validate.userName}>
                                 <Input placeholder="请输入用户名" prefix={<UserOutlined />} allowClear maxLength="50" />
                             </Form.Item>

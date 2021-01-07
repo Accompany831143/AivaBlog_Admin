@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Redirect, Switch } from "react-router-dom";
+import { HashRouter as Router, Route, Redirect, Switch } from "react-router-dom";
 import Login from './views/Login'
 import Manage from './views/Manage'
 // import "./Mock"
