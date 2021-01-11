@@ -345,21 +345,24 @@ export default class Home extends Component {
                         <span>上次登录IP：{this.state.lastInfo.ip || '暂无'}</span>
                         <span style={{ marginLeft: 16 }}>登录时间：{this.state.lastInfo.date}</span>
                     </p>
-                    <p>
-                        今天
-                        &nbsp;
-                        {this.state.weatherInfo.city}
-                        &nbsp;
-                        <b>{this.state.weatherInfo.weather}</b>，
-                        气温
-                        {this.state.weatherInfo.temperature}
-                        ℃，
-                        空气湿度
-                        {this.state.weatherInfo.humidity}，
-
-                        {this.state.weatherInfo.winddirection}风
-
-                    </p>
+                    {
+                        this.state.weatherInfo.city ? (<p>
+                            今天
+                            &nbsp;
+                            {this.state.weatherInfo.city}
+                            &nbsp;
+                            <b>{this.state.weatherInfo.weather}</b>，
+                            气温
+                            {this.state.weatherInfo.temperature}
+                            ℃，
+                            空气湿度
+                            {this.state.weatherInfo.humidity}，
+    
+                            {this.state.weatherInfo.winddirection}风
+    
+                        </p>) : ''
+                    }
+                    
                 </div>
                 <div className="home_summary">
                     <h2>数据统计</h2>
