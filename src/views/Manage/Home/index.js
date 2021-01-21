@@ -80,6 +80,7 @@ export default class Home extends Component {
         Axios({
             url: '/api/admin/home/getAddArticle'
         }).then(res => {
+            console.log(res)
             res.data = res.data.map(item => {
                 item._id = Moment(item._id).format('YYYY-MM-DD HH:mm:ss')
                 return item
@@ -115,7 +116,7 @@ export default class Home extends Component {
             }
         })
 
-
+        chart.axis('getNum', false);
 
 
         chart.interval().position('_id*getNum');
