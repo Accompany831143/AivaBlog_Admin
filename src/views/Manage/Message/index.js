@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Table,Avatar, Modal,Switch,message } from 'antd';
-import { EyeOutlined, } from '@ant-design/icons'
+import { Table,Avatar, Modal,Switch,message,Image,Popconfirm } from 'antd';
+import { EyeOutlined,DeleteOutlined } from '@ant-design/icons'
 import MenuForm from '../../../components/MenuForm'
 import Axios from "../../../Axios"
 import Moment from "moment"
@@ -10,7 +10,6 @@ export default class Message extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            selectedRowKeys: [],
             tableData: [],
             keyWord: '',
             showDetail: false,
@@ -21,7 +20,8 @@ export default class Message extends Component {
                     title: '用户名称',
                     dataIndex: 'userName',
                     key: 'userName',
-                    ellipsis: true
+                    ellipsis: true,
+                    className:'message-userName'
                 },
                 {
                     title: '用户头像',
@@ -30,7 +30,7 @@ export default class Message extends Component {
                     ellipsis: true,
                     render:(val, data, index) => {
                         return (
-                            <Avatar src={data.userAvatar} />
+                            <Avatar style={{cursor:'pointer'}} src={<Image src={data.userAvatar} />} />
                         )
                     }
 
@@ -39,7 +39,7 @@ export default class Message extends Component {
                     title: '内容',
                     dataIndex: 'content',
                     key: 'content',
-                    align: 'content',
+                    align: 'center',
                     ellipsis: true
 
                 },
@@ -64,11 +64,19 @@ export default class Message extends Component {
                 {
                     title: '操作',
                     dataIndex: 'action',
-                    key: 'id',
+                    key: '_id',
                     render: (val, data, index) => {
                         return (
                             <div className="actionStyle">
                                 <div title="查看" onClick={this.lookDetail.bind(this, data)} style={{ marginRight: 10 }}><EyeOutlined /></div>
+                                <div title="删除"><Popconfirm
+                                    title="留言删除后无法恢复，您确定要删除吗？"
+                                    onConfirm={this.removeItem.bind(this, data)}
+                                    okText="删除"
+                                    cancelText="取消"
+                                >
+                                    <DeleteOutlined />
+                                </Popconfirm></div>
                             </div>
                         )
                     }
@@ -87,6 +95,23 @@ export default class Message extends Component {
         }
     }
 
+    removeItem(data) {
+        let arr = [data.uuid]
+        Axios({
+            url:'/api/admin/message/delete',
+            method:'post',
+            data:{
+                ids:arr
+            }
+        }).then(res => {
+            res = res.result
+            if(res && res.length) {
+                message.success('删除成功！')
+                this.getMessageData()
+            }
+        })
+    }
+
     // 获取留言数据
     getMessageData() {
         Axios({
@@ -97,7 +122,7 @@ export default class Message extends Component {
             }
         }).then(res => {
             res.data = res.data.map(item => {
-                item.key = item.cid
+                item.key = item.uuid
                 item.createDate = Moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
                 item.userAvatar = item.userAvatar.replace(/\\/g,
                     '/')
@@ -129,11 +154,6 @@ export default class Message extends Component {
             }
         })
     }
-
-    // 选择表格数据
-    onSelectChange = (keys, rows) => {
-        this.setState({ selectedRowKeys: keys });
-    };
 
     // 页码变化 
     pageChange(page, pageSize) {
@@ -188,7 +208,7 @@ export default class Message extends Component {
             }
         }).then(res => {
             res.data = res.data.map(item => {
-                item.key = item.cid
+                item.key = item.uuid
                 item.createDate = Moment(item.createDate).format('YYYY-MM-DD HH:mm:ss')
                 item.userAvatar = item.userAvatar.replace(/\\/g,
                     '/')
@@ -224,16 +244,11 @@ export default class Message extends Component {
 
 
     render() {
-        const { selectedRowKeys } = this.state
-        const rowSelection = {
-            selectedRowKeys: selectedRowKeys,
-            onChange: this.onSelectChange,
-        };
         return (
             <div className="channelManage">
                 <MenuForm noShowBtn={true} onSearch={this.SearchHandler.bind(this)}/>
                 <div className="tableBox">
-                    <Table rowSelection={rowSelection} dataSource={this.state.tableData} columns={this.state.columnsData} pagination={{ total: this.state.pageInfo.total, showQuickJumper: true, onChange: this.pageChange.bind(this) }} />
+                    <Table dataSource={this.state.tableData} columns={this.state.columnsData} pagination={{ total: this.state.pageInfo.total, showQuickJumper: true, onChange: this.pageChange.bind(this) }} />
 
                 </div>
 
@@ -250,8 +265,8 @@ export default class Message extends Component {
                         </div>
                         <div>
                             <span>用户头像：</span>
-                            <span>
-                                <Avatar src={this.state.detailInfo.userAvatar} />
+                            <span style={{cursor:'pointer'}}>
+                                <Avatar src={<Image src={this.state.detailInfo.userAvatar} />} />
                             </span>
                             
                         </div>

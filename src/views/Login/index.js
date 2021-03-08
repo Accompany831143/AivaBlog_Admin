@@ -5,65 +5,62 @@ import Axios from "../../Axios"
 import "./index.css";
 
 export default class Login extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            validate: {
-                userName: [
-                    {
-                        validator: (_, value) => {
-                            value = value || ''
-                            if (value.length <= 0) {
-                                return Promise.reject('请输入用户名！')
+    state = {
+        validate: {
+            userName: [
+                {
+                    validator: (_, value) => {
+                        value = value || ''
+                        if (value.length <= 0) {
+                            return Promise.reject('请输入用户名！')
+                        } else {
+                            let reg = /^[a-zA-Z0-9]{4,20}$/g;
+                            if (reg.test(value)) {
+                                return Promise.resolve()
                             } else {
-                                let reg = /^[a-zA-Z0-9]{4,20}$/g;
-                                if (reg.test(value)) {
-                                    return Promise.resolve()
-                                } else {
-                                    return Promise.reject('用户名格式错误！')
-                                }
+                                return Promise.reject('用户名格式错误！')
                             }
                         }
                     }
-                ],
-                password: [
-                    {
-                        validator: (_, value) => {
-                            value = value || ''
-                            if (value.length <= 0) {
-                                return Promise.reject('请输入密码')
+                }
+            ],
+            password: [
+                {
+                    validator: (_, value) => {
+                        value = value || ''
+                        if (value.length <= 0) {
+                            return Promise.reject('请输入密码')
+                        } else {
+                            let reg = /^[a-zA-Z0-9\.@_]{4,20}$/g;
+                            if (reg.test(value)) {
+                                return Promise.resolve()
                             } else {
-                                let reg = /^[a-zA-Z0-9\.@_]{4,20}$/g;
-                                if (reg.test(value)) {
-                                    return Promise.resolve()
-                                } else {
-                                    return Promise.reject('密码格式错误！')
-                                }
+                                return Promise.reject('密码格式错误！')
                             }
                         }
                     }
-                ],
-                authCode: [
-                    {
-                        validator: (_, value) => {
-                            value = value || ''
-                            if (value.length <= 0) {
-                                return Promise.reject('请输入验证码')
+                }
+            ],
+            authCode: [
+                {
+                    validator: (_, value) => {
+                        value = value || ''
+                        if (value.length <= 0) {
+                            return Promise.reject('请输入验证码')
+                        } else {
+                            let reg = /^[abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNPQRETUVWXYZ23456789]{4}$/g;
+                            if (reg.test(value)) {
+                                return Promise.resolve()
                             } else {
-                                let reg = /^[abcdefghjkmnpqrstuvwxyzABCDEFGHJKMNOPQRETUVWXYZ23456789]{4}$/g;
-                                if (reg.test(value)) {
-                                    return Promise.resolve()
-                                } else {
-                                    return Promise.reject('验证码格式错误！')
-                                }
+                                return Promise.reject('验证码格式错误！')
                             }
                         }
                     }
-                ],
-            },
-            authCode: '',
-            formElement:React.createRef()
-        }
+                }
+            ],
+        },
+        authCode: '',
+        formElement: React.createRef()
     }
 
     componentDidMount() {
@@ -117,23 +114,24 @@ export default class Login extends Component {
 
 
     render() {
+        const {state} = this
         return (
             <div className="loginMain">
                 <div className="container">
                     <div className="loginBox">
                         <h1>Aiva博客后台管理系统</h1>
-                        <Form ref={this.state.formElement} labelCol={{ 'span': 4 }} onFinish={this.onFinish.bind(this)}>
-                            <Form.Item label="用户名" name="userName" rules={this.state.validate.userName}>
+                        <Form ref={state.formElement} labelCol={{ 'span': 4 }} onFinish={this.onFinish.bind(this)}>
+                            <Form.Item label="用户名" name="userName" rules={state.validate.userName}>
                                 <Input placeholder="请输入用户名" prefix={<UserOutlined />} allowClear maxLength="50" />
                             </Form.Item>
-                            <Form.Item label="密码" name="password" rules={this.state.validate.password}>
+                            <Form.Item label="密码" name="password" rules={state.validate.password}>
                                 <Input.Password placeholder="请输入密码" prefix={<LockOutlined />} allowClear maxLength="50" />
                             </Form.Item>
                             <Form.Item label="验证码">
-                                <Form.Item name="authCode" noStyle rules={this.state.validate.authCode}>
+                                <Form.Item name="authCode" noStyle rules={state.validate.authCode}>
                                     <Input style={{ width: 150 }} placeholder="请输入验证码" prefix={<SafetyCertificateOutlined />} allowClear />
                                 </Form.Item>
-                                <span style={{ display: 'inline-block', background: '#fff', verticalAlign: 'middle', marginLeft: 10, width: 100, height: 32, cursor: 'pointer' }} onClick={this.getAuthCode.bind(this)} dangerouslySetInnerHTML={{ __html: this.state.authCode }}></span>
+                                <span style={{ display: 'inline-block', background: '#fff', verticalAlign: '-11px', marginLeft: 10, width: 100, height: 32, cursor: 'pointer' }} onClick={this.getAuthCode.bind(this)} dangerouslySetInnerHTML={{ __html: state.authCode }}></span>
                             </Form.Item>
                             <Button size="large" type="primary" block htmlType="submit">立即登录</Button>
                         </Form>

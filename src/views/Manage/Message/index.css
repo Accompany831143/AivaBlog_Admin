@@ -35,3 +35,6 @@
     overflow: hidden;
     text-overflow: ellipsis; */
 }
+.message-userName {
+    padding-left: 50px !important;
+}

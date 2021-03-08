@@ -1,5 +1,5 @@
 import React, { Component } from "react"
-import { HashRouter as Router, Route, Redirect, Switch } from 'react-router-dom'
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 import { Layout, Menu } from 'antd';
 
 import Axios from "../../Axios"
@@ -18,116 +18,119 @@ import {
     UsergroupAddOutlined
 } from '@ant-design/icons';
 
-import Home from "./Home";
-import Channel from "./Channel";
-import Article from "./Article";
-import Tag from "./Tag";
-import Picture from "./Picture";
-import User from "./User";
-import Message from "./Message";
-import UserSetting from './Admin/TabPanes/PopleSettings'
-import userGroupSetting from './Admin/TabPanes/PopleGroup'
-
 import AivaLogo from '../../images/Aiva.png';
 import "./index.css"
+
+import asyncComponent from "./AsyncComponent";
+
+const Home = asyncComponent(() => import( "./Home"))
+const Channel = asyncComponent(() => import( "./Channel"))
+const Article = asyncComponent(() => import( "./Article"))
+const Tag = asyncComponent(() => import( "./Tag"))
+const Picture = asyncComponent(() => import( "./Picture"))
+const User = asyncComponent(() => import( "./User"))
+const Message = asyncComponent(() => import( "./Message"))
+const UserSetting = asyncComponent(() => import( './Admin/TabPanes/PopleSettings'))
+const userGroupSetting = asyncComponent(() => import( './Admin/TabPanes/PopleGroup'))
+
+
+
 
 const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 export default class Manage extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            collapsed: false,
-            userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {},
-            timeInfo: '',
-            timer1: null,
-            menuList: [],
-            menuInfo: [
-                {
-                    path: '/home',
-                    title: '首页',
-                    key: 'home',
-                    component: Home,
-                    icon: <HomeOutlined />
-                },
-                {
-                    path: '/channel',
-                    title: '栏目管理',
-                    key: 'channel',
-                    component: Channel,
-                    icon: <MenuOutlined />
-                },
-                {
-                    path: '/article',
-                    title: '文章管理',
-                    key: 'article',
-                    component: Article,
-                    icon: <ReadOutlined />
-                },
-                {
-                    path: '/tag',
-                    title: '标签管理',
-                    key: 'tag',
-                    component: Tag,
-                    icon: <TagsOutlined />
-                },
-                {
-                    path: '/picture',
-                    title: '图片管理',
-                    key: 'picture',
-                    component: Picture,
-                    icon: <PictureOutlined />
-                },
-                {
-                    path: '/user',
-                    title: '用户管理',
-                    key: 'user',
-                    component: User,
-                    icon: <UserOutlined />
-                },
-                {
-                    path: '/message',
-                    title: '留言管理',
-                    key: 'message',
-                    component: Message,
-                    icon: <MessageOutlined />
-                },
-                {
-                    path: '/admin',
-                    title: '管理员设置',
-                    key: 'admin',
-                    icon: <SettingOutlined />,
-                    children: [
-                        {
-                            path: '/admin/userSetting',
-                            title: '成员设置',
-                            key: 'userSetting',
-                            component: UserSetting,
-                            icon: <UserSwitchOutlined />,
-                        },
-                        {
-                            path: '/admin/groupSetting',
-                            title: '用户组设置',
-                            key: 'groupSetting',
-                            component: userGroupSetting,
-                            icon: <UsergroupAddOutlined />,
-                        },
-                    ]
-                },
-            ]
-        }
+    state = {
+        collapsed: false,
+        userInfo: JSON.parse(sessionStorage.getItem('userInfo')) || {},
+        timeInfo: '',
+        timer1: null,
+        menuList: [],
+        menuInfo: [
+            {
+                path: '/home',
+                title: '首页',
+                key: 'home',
+                component: Home,
+                icon: <HomeOutlined />
+            },
+            {
+                path: '/channel',
+                title: '栏目管理',
+                key: 'channel',
+                component: Channel,
+                icon: <MenuOutlined />
+            },
+            {
+                path: '/article',
+                title: '文章管理',
+                key: 'article',
+                component: Article,
+                icon: <ReadOutlined />
+            },
+            {
+                path: '/tag',
+                title: '标签管理',
+                key: 'tag',
+                component: Tag,
+                icon: <TagsOutlined />
+            },
+            {
+                path: '/picture',
+                title: '图片管理',
+                key: 'picture',
+                component: Picture,
+                icon: <PictureOutlined />
+            },
+            {
+                path: '/user',
+                title: '用户管理',
+                key: 'user',
+                component: User,
+                icon: <UserOutlined />
+            },
+            {
+                path: '/message',
+                title: '留言管理',
+                key: 'message',
+                component: Message,
+                icon: <MessageOutlined />
+            },
+            {
+                path: '/admin',
+                title: '管理员设置',
+                key: 'admin',
+                icon: <SettingOutlined />,
+                children: [
+                    {
+                        path: '/admin/userSetting',
+                        title: '成员设置',
+                        key: 'userSetting',
+                        component: UserSetting,
+                        icon: <UserSwitchOutlined />,
+                    },
+                    {
+                        path: '/admin/groupSetting',
+                        title: '用户组设置',
+                        key: 'groupSetting',
+                        component: userGroupSetting,
+                        icon: <UsergroupAddOutlined />,
+                    },
+                ]
+            },
+        ]
     }
 
 
 
     componentDidMount() {
-        this.getTime()
         let userInfo = JSON.parse(sessionStorage.getItem('loginInfo'))
         if (!userInfo || !userInfo.state || !userInfo.token) {
             let { history } = this.props
             history.push('/')
+            return
         }
+        this.getTime()
         this.getMenu()
     }
 
@@ -210,16 +213,16 @@ export default class Manage extends Component {
 
 
     render() {
-        const { collapsed } = this.state;
+        const { state } = this;
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider collapsed={collapsed}>
+                <Sider collapsed={state.collapsed}>
                     <div className="logo">
                         <img src={AivaLogo} width="50%" />
                     </div>
                     <Menu theme="dark" mode="inline" defaultSelectedKeys={['/home']}>
                         {
-                            this.state.menuList.map(item => {
+                            state.menuList.map(item => {
                                 if (item.children && Array.isArray(item.children) && item.children[0]) {
                                     return <SubMenu key={item.key} icon={item.icon} title={item.title}>
                                         {item.children.map(item => {
@@ -248,17 +251,17 @@ export default class Manage extends Component {
                         <div className="headerBox">
                             <div className="timeInfo">
                                 <div>
-                                    {React.createElement(this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+                                    {React.createElement(state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
                                         className: 'trigger',
                                         onClick: this.toggle.bind(this),
                                     })}
                                 </div>
                                 <div style={{ marginLeft: 20 }}>
-                                    <p>{this.state.timeInfo}</p>
+                                    <p>{state.timeInfo}</p>
                                 </div>
                             </div>
                             <div className="userSetting">
-                                <p><span>{this.state.userInfo.userName}</span><span onClick={this.userQuit.bind(this)} className="quit">退出</span></p>
+                                <p><span>{state.userInfo.userName}</span><span onClick={this.userQuit.bind(this)} className="quit">退出</span></p>
                             </div>
                         </div>
                     </Header>
@@ -268,7 +271,7 @@ export default class Manage extends Component {
                             <Router>
                                 <Switch>
                                     {
-                                        this.state.menuList.map(item => {
+                                        state.menuList.map(item => {
                                             if (item.children && Array.isArray(item.children) && item.children[0]) {
                                                 return item.children.map(item => {
                                                     return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
@@ -279,8 +282,7 @@ export default class Manage extends Component {
 
                                         })
                                     }
-                                    <Redirect from='/manage' exact to={"/manage/home"} />
-                                    <Route component={Home} />
+                                    <Redirect from='/manage' to={"/manage/home"} />
                                 </Switch>
                             </Router>
                         </div>

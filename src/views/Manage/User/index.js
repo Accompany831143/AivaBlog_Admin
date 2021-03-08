@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Table,Avatar, Modal } from 'antd';
+import { Table,Avatar, Modal,Image } from 'antd';
 import { EyeOutlined, } from '@ant-design/icons'
 import MenuForm from '../../../components/MenuForm'
 import Axios from "../../../Axios"
@@ -30,7 +30,7 @@ export default class Channel extends Component {
                     ellipsis: true,
                     render:(val, data, index) => {
                         return (
-                            <Avatar src={data.userAvatar} />
+                            <Avatar style={{cursor:'pointer'}} src={<Image src={data.userAvatar} />} />
                         )
                     }
 
@@ -242,8 +242,8 @@ export default class Channel extends Component {
                         </div>
                         <div>
                             <span>用户头像：</span>
-                            <span>
-                                <Avatar src={this.state.detailInfo.userAvatar} />
+                            <span style={{cursor:'pointer'}}>
+                                <Avatar src={<Image src={this.state.detailInfo.userAvatar} />} />
                             </span>
                             
                         </div>

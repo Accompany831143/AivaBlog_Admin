@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { message } from 'antd'
 import { Chart, Util } from '@antv/g2';
 import Axios from '../../../Axios'
 import { UserOutlined, PictureOutlined, TagOutlined, MessageOutlined } from "@ant-design/icons"
@@ -7,25 +6,23 @@ import Moment from "moment"
 import "./index.css"
 
 export default class Home extends Component {
-    constructor(props) {
-        super(props)
-        this.state = {
-            userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
-            statistical: {},
-            weatherInfo: {},
-            accessData: [],
-            addArticleData: [],
-            articleMapData: [],
-            userData: [],
-            lastInfo: {}
-        }
+    state = {
+        userInfo: JSON.parse(sessionStorage.getItem('userInfo')),
+        statistical: {},
+        weatherInfo: {},
+        accessData: [],
+        addArticleData: [],
+        articleMapData: [],
+        userData: [],
+        lastInfo: {}
     }
+
 
     componentDidMount() {
         this.getLastInfo()
         this.getStatisticalData()
         this.getWeather()
-        this.getAddArticleData(this.renderAddArticleMap.bind(this))
+        // this.getAddArticleData(this.renderAddArticleMap.bind(this))
         this.getArticleData(this.renderArticleMap.bind(this))
         this.getUserData(this.renderUserMap.bind(this))
         this.getAccessData(this.renderAccessMap.bind(this))
@@ -65,7 +62,7 @@ export default class Home extends Component {
     getWeather() {
         Axios({
             url: '/api/admin/home/getWeatherInfo',
-            method:'post'
+            method: 'post'
         }).then(res => {
             res = res.lives[0]
             this.setState({
@@ -75,68 +72,67 @@ export default class Home extends Component {
 
     }
 
-    // 请求新增文章数据
-    getAddArticleData(fn) {
-        Axios({
-            url: '/api/admin/home/getAddArticle'
-        }).then(res => {
-            console.log(res)
-            res.data = res.data.map(item => {
-                item._id = Moment(item._id).format('YYYY-MM-DD HH:mm:ss')
-                return item
-            })
-            this.setState({
-                addArticleData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
-            }, () => {
-                if (fn) {
-                    fn()
-                }
-            })
-        })
-    }
+    // // 请求新增文章数据
+    // getAddArticleData(fn) {
+    //     Axios({
+    //         url: '/api/admin/home/getAddArticle'
+    //     }).then(res => {
+    //         res.data = res.data.map(item => {
+    //             item._id = Moment(item._id).format('YYYY-MM-DD HH:mm:ss')
+    //             return item
+    //         })
+    //         this.setState({
+    //             addArticleData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
+    //         }, () => {
+    //             if (fn) {
+    //                 fn()
+    //             }
+    //         })
+    //     })
+    // }
 
-    // 渲染新增文章图表
-    renderAddArticleMap() {
+    // // 渲染新增文章图表
+    // renderAddArticleMap() {
 
-        const data = this.state.addArticleData
+    //     const data = this.state.addArticleData
 
-        const chart = new Chart({
-            container: 'addArticleMap',
-            autoFit: true,
-            height: 260,
-            padding: [50, 50, 0]
-        });
-        chart.data(data);
-        chart.scale({
-            _id: {
-                nice: true
-            },
-            getNum: {
-                alias: '新增文章数量 ',
-            }
-        })
+    //     const chart = new Chart({
+    //         container: 'addArticleMap',
+    //         autoFit: true,
+    //         height: 260,
+    //         padding: [50, 50, 0]
+    //     });
+    //     chart.data(data);
+    //     chart.scale({
+    //         _id: {
+    //             nice: true
+    //         },
+    //         getNum: {
+    //             alias: '新增文章数量 ',
+    //         }
+    //     })
 
-        chart.axis('getNum', false);
+    //     chart.axis('getNum', false);
 
 
-        chart.interval().position('_id*getNum');
-        chart.interaction('element-active');
+    //     chart.interval().position('_id*getNum');
+    //     chart.interaction('element-active');
 
-        // 添加文本标注
-        data.forEach((item) => {
-            chart
-                .annotation()
-                .text({
-                    position: [item.date, item.num],
-                    content: item.num,
-                    style: {
-                        textAlign: 'center',
-                    },
-                    offsetY: -30,
-                })
-        });
-        chart.render();
-    }
+    //     // 添加文本标注
+    //     data.forEach((item) => {
+    //         chart
+    //             .annotation()
+    //             .text({
+    //                 position: [item.date, item.num],
+    //                 content: item.num,
+    //                 style: {
+    //                     textAlign: 'center',
+    //                 },
+    //                 offsetY: -30,
+    //             })
+    //     });
+    //     chart.render();
+    // }
 
 
     // 渲染文章扇形图
@@ -215,7 +211,7 @@ export default class Home extends Component {
             url: '/api/admin/home/getArticle',
         }).then(res => {
             this.setState({
-                articleMapData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
+                articleMapData: res.data.length <= 0 ? [{ _id: Moment(new Date()).format('YYYY-MM-DD'), getNum: 0 }] : res.data
             }, () => {
                 if (fn) {
                     fn()
@@ -234,8 +230,18 @@ export default class Home extends Component {
                 item._id = Moment(item._id).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
+            res.data.sort((a, b) => {
+                function get(obj) {
+                    let cloneA = { ...obj }
+                    let arr = cloneA._id.split('-')
+                    let day = parseInt(arr.pop())
+                    return day
+                }
+
+                return get(a) > get(b)
+            })
             this.setState({
-                userData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
+                userData: res.data.length <= 0 ? [{ _id: Moment(new Date()).format('YYYY-MM-DD'), getNum: 0 }] : res.data
             }, () => {
                 if (fn) {
                     fn()
@@ -262,12 +268,12 @@ export default class Home extends Component {
             },
             getNum: {
                 nice: true,
-                alias:'注册人数',
+                alias: '注册人数',
 
             },
         });
         chart.option('slider', {
-            end: 0.8
+            end: 1
         });
 
 
@@ -288,8 +294,18 @@ export default class Home extends Component {
                 item.date = Moment(item.date).format('YYYY-MM-DD HH:mm:ss')
                 return item
             })
+            res.data.sort((a, b) => {
+                function get(obj) {
+                    let cloneA = { ...obj }
+                    let arr = cloneA._id.split('-')
+                    let day = parseInt(arr.pop())
+                    return day
+                }
+
+                return get(a) > get(b)
+            })
             this.setState({
-                accessData: res.data.length <= 0 ? [{_id:Moment(new Date()).format('YYYY-MM-DD'),getNum:0}] :res.data
+                accessData: res.data.length <= 0 ? [{ _id: Moment(new Date()).format('YYYY-MM-DD'), getNum: 0 }] : res.data
             }, () => {
                 if (fn) {
                     fn()
@@ -301,7 +317,6 @@ export default class Home extends Component {
     //渲染访问量图表
     renderAccessMap() {
         const data = this.state.accessData;
-
         const chart = new Chart({
             container: 'accessMap',
             autoFit: true,
@@ -315,7 +330,7 @@ export default class Home extends Component {
             },
             getNum: {
                 nice: true,
-                alias:'访问量',
+                alias: '访问量',
             },
         });
 
@@ -324,7 +339,7 @@ export default class Home extends Component {
             shared: true
         });
         chart.option('slider', {
-            end: 0.8
+            end: 1
         });
 
 
@@ -338,32 +353,33 @@ export default class Home extends Component {
 
 
     render() {
+        const { state } = this
         return (
             <div className="manage_home">
                 <div>
-                    <h2>欢迎您，{this.state.userInfo.userName}</h2>
+                    <h2>欢迎您，{state.userInfo.userName}</h2>
                     <p style={{ color: '#999' }}>
-                        <span>上次登录IP：{this.state.lastInfo.ip || '暂无'}</span>
-                        <span style={{ marginLeft: 16 }}>登录时间：{this.state.lastInfo.date}</span>
+                        <span>上次登录IP：{state.lastInfo.ip || '暂无'}</span>
+                        <span style={{ marginLeft: 16 }}>上次登录时间：{state.lastInfo.date}</span>
                     </p>
                     {
-                        this.state.weatherInfo.city ? (<p>
+                        state.weatherInfo.city ? (<p>
                             今天
                             &nbsp;
-                            {this.state.weatherInfo.city}
+                            {state.weatherInfo.city}
                             &nbsp;
-                            <b>{this.state.weatherInfo.weather}</b>，
+                            <b>{state.weatherInfo.weather}</b>，
                             气温
-                            {this.state.weatherInfo.temperature}
+                            {state.weatherInfo.temperature}
                             ℃，
                             空气湿度
-                            {this.state.weatherInfo.humidity}，
-    
-                            {this.state.weatherInfo.winddirection}风
-    
+                            {state.weatherInfo.humidity}，
+
+                            {state.weatherInfo.winddirection}风
+
                         </p>) : ''
                     }
-                    
+
                 </div>
                 <div className="home_summary">
                     <h2>数据统计</h2>
@@ -377,7 +393,7 @@ export default class Home extends Component {
                             </div>
                             <div className="summary_info">
                                 <div>用户总数</div>
-                                <div>{this.state.statistical.allUser}</div>
+                                <div>{state.statistical.allUser}</div>
                             </div>
                         </li>
                         <li>
@@ -389,7 +405,7 @@ export default class Home extends Component {
                             </div>
                             <div className="summary_info">
                                 <div>图片总数</div>
-                                <div>{this.state.statistical.allPicture}</div>
+                                <div>{state.statistical.allPicture}</div>
                             </div>
                         </li>
                         <li>
@@ -401,7 +417,7 @@ export default class Home extends Component {
                             </div>
                             <div className="summary_info">
                                 <div>标签总数</div>
-                                <div>{this.state.statistical.allTag}</div>
+                                <div>{state.statistical.allTag}</div>
                             </div>
                         </li>
                         <li>
@@ -413,28 +429,28 @@ export default class Home extends Component {
                             </div>
                             <div className="summary_info">
                                 <div>留言总数</div>
-                                <div>{this.state.statistical.allMessage}</div>
+                                <div>{state.statistical.allMessage}</div>
                             </div>
                         </li>
                     </ul>
                 </div>
-                <div className="caMap">
-                    <div>
+                <div >
+                    {/* <div>
                         <h2>新增文章数据统计</h2>
                         <div id="addArticleMap"></div>
-                    </div>
+                    </div> */}
                     <div>
-                        <h2>文章占比统计</h2>
+                        <h2>文章比例</h2>
                         <div id="articleMap"></div>
                     </div>
                 </div>
                 <div>
-                    <h2>用户数据</h2>
+                    <h2>当月用户注册记录</h2>
                     <br />
                     <div id="userMap"></div>
                 </div>
                 <div>
-                    <h2>访问记录</h2>
+                    <h2>当月访问记录</h2>
                     <br />
                     <div id="accessMap"></div>
                 </div>
