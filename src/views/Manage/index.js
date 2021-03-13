@@ -1,6 +1,6 @@
-import React, { Component } from "react"
+import React, { Component, lazy } from "react"
 import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
-import { Layout, Menu } from 'antd';
+import { Layout, Menu,Spin } from 'antd';
 
 import Axios from "../../Axios"
 import {
@@ -20,18 +20,18 @@ import {
 
 import AivaLogo from '../../images/Aiva.png';
 import "./index.css"
+import "./Channel/index.css"
 
-import asyncComponent from "./AsyncComponent";
 
-const Home = asyncComponent(() => import( "./Home"))
-const Channel = asyncComponent(() => import( "./Channel"))
-const Article = asyncComponent(() => import( "./Article"))
-const Tag = asyncComponent(() => import( "./Tag"))
-const Picture = asyncComponent(() => import( "./Picture"))
-const User = asyncComponent(() => import( "./User"))
-const Message = asyncComponent(() => import( "./Message"))
-const UserSetting = asyncComponent(() => import( './Admin/TabPanes/PopleSettings'))
-const userGroupSetting = asyncComponent(() => import( './Admin/TabPanes/PopleGroup'))
+const Home = lazy(() => import("./Home"))
+const Channel = lazy(() => import("./Channel"))
+const Article = lazy(() => import("./Article"))
+const Tag = lazy(() => import("./Tag"))
+const Picture = lazy(() => import("./Picture"))
+const User = lazy(() => import("./User"))
+const Message = lazy(() => import("./Message"))
+const UserSetting = lazy(() => import('./Admin/TabPanes/PopleSettings'))
+const userGroupSetting = lazy(() => import('./Admin/TabPanes/PopleGroup'))
 
 
 
@@ -268,23 +268,25 @@ export default class Manage extends Component {
                     <Content style={{ margin: '0 16px', maxHeight: 'calc(100vh - 64px - 54px)', overflow: 'hidden' }}>
 
                         <div id="onlyScroll" className="mainContent">
-                            <Router>
-                                <Switch>
-                                    {
-                                        state.menuList.map(item => {
-                                            if (item.children && Array.isArray(item.children) && item.children[0]) {
-                                                return item.children.map(item => {
+                            <React.Suspense fallback={<Spin size="large" className="mainLoading" tip="正在玩命加载中" />}>
+                                <Router>
+                                    <Switch>
+                                        {
+                                            state.menuList.map(item => {
+                                                if (item.children && Array.isArray(item.children) && item.children[0]) {
+                                                    return item.children.map(item => {
+                                                        return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
+                                                    })
+                                                } else {
                                                     return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
-                                                })
-                                            } else {
-                                                return <Route path={"/manage" + item.path} key={item.key} exact component={item.component} />
-                                            }
+                                                }
 
-                                        })
-                                    }
-                                    <Redirect from='/manage' to={"/manage/home"} />
-                                </Switch>
-                            </Router>
+                                            })
+                                        }
+                                        <Redirect from='/manage' to={"/manage/home"} />
+                                    </Switch>
+                                </Router>
+                            </React.Suspense>
                         </div>
                     </Content>
                     <Footer>Copyright © 2020 By Aiva. All Rights Reserved</Footer>

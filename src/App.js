@@ -1,8 +1,9 @@
 import { HashRouter as Router, Route, Redirect, Switch } from "react-router-dom";
+import './App.css';
 import Login from './views/Login'
 import Manage from './views/Manage'
-// import "./Mock"
-import './App.css';
+
+
 
 function App() {
   return (

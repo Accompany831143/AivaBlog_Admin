@@ -4,7 +4,7 @@ import { EyeOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import MenuForm from '../../../components/MenuForm'
 import Axios from "../../../Axios"
 import Moment from "moment"
-import "./index.css"
+// import "./index.css"
 export default class Channel extends Component {
     constructor(props) {
         super(props)

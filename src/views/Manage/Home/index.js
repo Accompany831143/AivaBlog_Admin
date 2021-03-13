@@ -227,7 +227,7 @@ export default class Home extends Component {
             url: '/api/admin/home/getUser'
         }).then(res => {
             res.data = res.data.map(item => {
-                item._id = Moment(item._id).format('YYYY-MM-DD HH:mm:ss')
+                item._id = Moment(item._id).format('YYYY-MM-DD')
                 return item
             })
             res.data.sort((a, b) => {
@@ -272,9 +272,9 @@ export default class Home extends Component {
 
             },
         });
-        chart.option('slider', {
-            end: 1
-        });
+        // chart.option('slider', {
+        //     end: 1
+        // });
 
 
         chart.line().position('_id*getNum').shape('smooth');
@@ -291,7 +291,7 @@ export default class Home extends Component {
             url: '/api/admin/home/getAccess'
         }).then(res => {
             res.data = res.data.map(item => {
-                item.date = Moment(item.date).format('YYYY-MM-DD HH:mm:ss')
+                item._id = Moment(item._id).format('YYYY-MM-DD')
                 return item
             })
             res.data.sort((a, b) => {
@@ -338,9 +338,9 @@ export default class Home extends Component {
             showCrosshairs: true,
             shared: true
         });
-        chart.option('slider', {
-            end: 1
-        });
+        // chart.option('slider', {
+        //     end: 1
+        // });
 
 
         chart.line().position('_id*getNum').shape('smooth')
